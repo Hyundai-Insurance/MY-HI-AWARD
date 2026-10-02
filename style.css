@@ -95,3 +95,40 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 .total-award-card>strong:has(+ .total-extra.hidden){padding-bottom:25px;border-bottom:2px solid #e5c05b;border-radius:20px}
 .total-award-card p{display:none!important}
 @media(max-width:360px){.total-award-card>small{font-size:15px}.total-award-card>strong{font-size:36px}.total-extra{font-size:14px}}
+
+/* 2026-10-02 user-final: cream total award card + tighter login CTA spacing */
+.total-award-card{
+  position:relative!important;overflow:visible!important;margin:16px 0 18px!important;padding:24px 18px 22px!important;
+  border-radius:24px!important;background:linear-gradient(135deg,#fffdf5,#fff6df)!important;
+  color:#173b68!important;border:2px solid #ead7a3!important;box-shadow:0 10px 24px rgba(23,59,104,.09)!important;
+  text-align:center!important;
+}
+.total-award-card::after{display:none!important;content:none!important}
+.total-award-card>small{
+  display:block!important;padding:0!important;margin:0 0 11px!important;color:#8d641b!important;opacity:1!important;
+  font-size:17px!important;font-weight:900!important;letter-spacing:-.35px!important;
+}
+.total-award-card>small::before{content:'💰 '!important;font-size:18px!important}
+.total-award-card>strong{
+  display:block!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;
+  color:#0d376f!important;text-align:center!important;font-size:42px!important;font-weight:900!important;
+  letter-spacing:-1.8px!important;line-height:1.1!important;
+}
+.total-extra{
+  display:inline-block!important;margin:13px auto 0!important;padding:0!important;border:0!important;background:transparent!important;
+  color:#9a6508!important;text-align:center!important;font-size:15px!important;font-weight:900!important;
+}
+.total-extra.hidden{display:none!important}
+.total-award-card>strong:has(+ .total-extra.hidden){padding:0!important;border:0!important;border-radius:0!important}
+.total-award-card p{display:none!important}
+/* error text must not create a large empty gap between input and CTA */
+.login-card-classic .err{min-height:0!important;height:auto!important;margin:5px 0 0!important;line-height:1.25!important}
+.login-card-classic .err:empty{display:none!important}
+.login-card-classic button{margin-top:10px!important}
+@media(max-width:380px){
+  .login-card-classic button{margin-top:8px!important}
+  .total-award-card{padding:21px 14px 20px!important}
+  .total-award-card>small{font-size:15px!important}
+  .total-award-card>strong{font-size:37px!important}
+  .total-extra{font-size:14px!important;margin-top:11px!important}
+}
