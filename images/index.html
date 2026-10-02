@@ -1,0 +1,23 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta property="og:title" content="현대해상 MY HI-AWARD"><meta property="og:description" content="나의 10월 시상과 HI-STAR를 한눈에"><meta property="og:image" content="https://hyundai-insurance.github.io/MY-HI-UP/hi-award-thumbnail.png?v=20261002c"><meta property="og:url" content="https://hyundai-insurance.github.io/MY-HI-UP/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="현대해상 MY HI-AWARD"><meta name="twitter:description" content="나의 10월 시상과 HI-STAR를 한눈에"><meta name="twitter:image" content="https://hyundai-insurance.github.io/MY-HI-UP/hi-award-thumbnail.png?v=20261002c"><title>MY HI-AWARD</title><link rel="stylesheet" href="style.css?v=20261002-cream2"></head><body><main class="app">
+<section id="loading" class="screen center"><div class="spin"></div><b>데이터 불러오는 중...</b></section>
+<section id="login" class="screen hidden login">
+  <div class="hero"><img class="login-hero-image" src="images/hiup-login-hero.jpg?v=20261002final" alt="MY HI-AWARD 10.2 OPEN"></div>
+  <div class="card login-card login-card-classic">
+    <div class="login-welcome">하이플래너님!</div>
+    <h2>사번을 입력해주세요!</h2>
+    <div class="login-input-wrap"><input id="code" type="text" maxlength="6" placeholder="사번 6자리" autocomplete="off" autocapitalize="characters"></div>
+    <p id="loginerr" class="err"></p>
+    <button id="submit">확인하기 <span aria-hidden="true">›</span></button>
+    <div class="login-benefits-classic" aria-hidden="true">
+      <div class="benefit benefit-blue"><b>▥</b><span>나의 HI-STAR<br>달성 현황!</span></div>
+      <div class="benefit benefit-gold"><b>🏆</b><span>시상금<br>미리 확인!</span></div>
+      <div class="benefit benefit-pink"><b>🎯</b><span>다음 목표까지<br>함께!</span></div>
+    </div>
+  </div>
+  <footer>본 서비스는 소속 플래너 본인의 조회를 위한 것입니다.<br>데이터는 매일 오전 10시 업데이트됩니다.<br><span>© 2026 현대해상 개인영업지원파트</span></footer>
+</section>
+<section id="result" class="screen hidden"><header><div><b>MY HI-AWARD</b><button id="back">← 다시 조회</button></div><h1>10월 시상 가이드</h1><p id="closing"></p></header><div class="wrap"><div class="card profile"><div><b id="name">-</b><small id="org">-</small></div><div><span id="pcode">-</span><small id="career">-</small></div></div><div class="total-award-card"><small>10월 총 예상 시상</small><strong id="total-cash">-</strong><div id="total-extra" class="total-extra hidden"></div><p id="total-breakdown"></p></div><div class="tabs"><button data-go="oct">🏆 10월 시상</button><button data-go="hs">⭐ HI-STAR</button></div>
+<section id="oct" class="panel"><div class="section-title"><span>🏆</span><div><h2>10월 활동량 시상</h2><p>현재 월납실적 기준</p></div></div><div class="big"><small>현재 월납실적</small><strong id="premium">-</strong><div class="bar"><i id="prog"></i></div><b id="pct">0%</b></div><div class="twocol"><div><small>현재 확보 시상금</small><strong id="award">-</strong></div><div><small>다음 단계까지</small><strong id="short">-</strong></div></div><div id="next-award" class="next-award"></div><h3>시상 기준 및 금액</h3><div id="tiers" class="tiers"></div><div class="thanks-card"><div class="thanks-head"><span class="rice">🌾</span><div><h3>하이플래너 감사물품 시상</h3><p>10/1 ~ 10/16</p></div></div><div class="thanks-body"><div><small>유실적 기본활동</small><strong>인보험 5만원↑ 참여</strong><span id="thanks-current">현재 실적 -</span></div><div id="thanks-status" class="thanks-status">확인중</div></div><div class="rice-reward">🍚 <b>달성 시 2026년 햅쌀 10KG</b><span>고객을 위한 활동에 감사의 마음을 담았습니다.</span></div></div></section>
+<section id="hs" class="panel"><div class="section-title"><span>⭐</span><div><h2>HI-STAR</h2><p>나의 달성 현황과 시상금까지!</p></div></div><div class="hs-summary"><div><small>달성 미션</small><strong id="mcount">0 / 9</strong></div><div><small>완성된 줄</small><strong id="lines">0줄</strong></div></div><div id="reward" class="reward"></div><p class="guide">카드를 누르면 회전하며 현재 실적과 달성조건을 확인할 수 있어요.</p><div id="board" class="board"></div></section></div></section>
+<section id="error" class="screen hidden center"><h2>데이터를 불러오지 못했습니다</h2><p id="errtxt"></p><button onclick="location.reload()">다시 시도</button></section>
+</main><script src="js/config.js?v=20261002"></script><script src="js/dataLoader.js?v=20261002"></script><script src="app.js?v=20261002"></script></body></html>

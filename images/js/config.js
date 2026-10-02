@@ -1,0 +1,1 @@
+const CONFIG={DATA_SHARD_DIR:'data/planners',DATA_SHARD_PREFIX_LENGTH:3};
