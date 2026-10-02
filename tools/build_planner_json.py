@@ -60,7 +60,7 @@ def main():
    'targetDb':{'key':'targetDb','title':'고객선정' if new else '타겟DB활용','current':num(get(r,11)),'unit':'명' if new else '%','achieved':yn(12),'rule':'집중고객선정 5명' if new else '활용률 70%'},
    'weekly':{'key':'weekly','title':'주차마감','current':num(get(r,13)),'unit':'원','achieved':yn(14),'rule':'신인 주차별 기준' if new else '기존 주차별 기준'},
    'mainProduct':{'key':'mainProduct','title':'주력상품','current':num(get(r,15)),'unit':'원','achieved':yn(16),'rule':'누계 10만원 이상'},
-   'plan':{'key':'plan','title':"누구나 플랜 참여",'current':num(get(r,17)),'unit':'건','achieved':yn(18),'rule':'1건 이상 참여'},
+   'plan':{'key':'plan','title':"10월 4~5주차 2차년도 브릿지 참여",'current':num(get(r,17)),'unit':'건','achieved':yn(18),'rule':'10월 4~5주차 2차년도 브릿지 참여'},
    'week1':{'key':'week1','title':'1주차 유실적 참여','current':num(get(r,20)),'unit':'원','achieved':yn(21),'rule':'5만원 참여'},
    'event':{'key':'event','title':'입문접수/우수고객 행사','current':num(get(r,22)),'unit':'명','achieved':yn(23),'rule':'1명 이상'},
    'auto':{'key':'auto','title':'자동차 / 운전자','current':num(get(r,24)),'unit':'건','achieved':yn(25),'rule':'자동차/운전자 기준'} }

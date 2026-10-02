@@ -240,6 +240,11 @@ const uiRenderer = {
         m.achieved = Number(m.current || 0) >= 100000;
         m.rule = "10만원 이상";
       }
+      // 기존 '누구나 플랜' 칸은 10월 4~5주차 2차년도 브릿지 참여 조건으로 표시한다.
+      if (m.key === "plan") {
+        m.title = "10월 4~5주차 2차년도 브릿지 참여";
+        m.rule = "10월 4~5주차 2차년도 브릿지 참여";
+      }
     });
     const achieved = missions.map(m => !!m.achieved);
     const combos = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
@@ -276,7 +281,7 @@ const uiRenderer = {
           goal = goals[week - 1]; unit = "원"; break;
         }
         case "mainProduct": goal = 100000; unit = "원"; break;
-        case "plan": goal = 1; unit = "건"; break;
+        case "plan": return "참여 필요";
         case "week1": goal = Number(m.goal || 0) || 50000; unit = "원"; break;
         case "event": goal = 1; unit = "명"; break;
         case "auto": goal = isNew ? 1 : 2; unit = "건"; break;
@@ -291,7 +296,7 @@ const uiRenderer = {
       const btn=document.createElement("button"); btn.type="button"; btn.className=`hs-card${m.achieved?' is-achieved':''}${lineCells.has(i)?' is-line':''}`;
       btn.setAttribute("aria-label",`${m.title} 상세 보기`);
       const pending = shortfallText(m);
-      btn.innerHTML=`<span class="hs-card-inner"><span class="hs-face hs-front"><span class="hs-num">${i+1}</span><span class="hs-title">${m.title}</span>${m.achieved?'<span class="hs-stamp">완료</span>':`<span class="hs-pending hs-shortfall">${pending}</span>`}</span><span class="hs-face hs-back"><span class="hs-back-title">${m.title}</span><span class="hs-current-label">현재 실적</span><span class="hs-current">${fmt(m)}</span><span class="hs-current-label">달성조건</span><span class="hs-rule">${m.rule || '-'}</span></span></span>`;
+      btn.innerHTML=`<span class="hs-card-inner"><span class="hs-face hs-front"><span class="hs-num">${i+1}</span><span class="hs-title">${m.title}</span><span class="hs-front-rule-label">조건</span><span class="hs-front-rule">${m.rule || '-'}</span>${m.achieved?'<span class="hs-stamp">완료</span>':`<span class="hs-pending hs-shortfall">부족 · ${pending}</span>`}</span><span class="hs-face hs-back"><span class="hs-back-title">${m.title}</span><span class="hs-current-label">현재 실적</span><span class="hs-current">${fmt(m)}</span><span class="hs-current-label">달성조건</span><span class="hs-rule">${m.rule || '-'}</span></span></span>`;
       btn.addEventListener("click",()=>btn.classList.toggle("is-flipped")); board.appendChild(btn);
     });
     const cel=this.el("histar-celebrate");
