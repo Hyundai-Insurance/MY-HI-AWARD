@@ -75,3 +75,23 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
  .login-benefits-classic .benefit{min-height:84px;padding:8px 3px}
  .login-benefits-classic .benefit span{font-size:10.8px}
 }
+
+/* 2026-10-02 total award visual refresh */
+.total-award-card{
+  position:relative;overflow:hidden;margin:16px 0 18px;padding:0 0 18px;
+  border-radius:24px;background:linear-gradient(145deg,#0b376f,#174f91);
+  color:#fff;border:1px solid #174f91;box-shadow:0 12px 28px rgba(16,47,93,.18);
+}
+.total-award-card::after{content:'★';position:absolute;right:18px;top:5px;font-size:72px;color:rgba(255,255,255,.055);line-height:1}
+.total-award-card>small{position:relative;z-index:1;display:block;padding:17px 20px 13px;font-size:17px;font-weight:900;opacity:1;color:#fff}
+.total-award-card>small::before{content:'💰 ';font-size:18px}
+.total-award-card>strong{position:relative;z-index:1;display:block;margin:0 14px;padding:24px 14px 10px;
+  border:2px solid #e5c05b;border-bottom:0;border-radius:20px 20px 0 0;background:linear-gradient(135deg,#fffdf5,#fff5d7);
+  color:#0d376f;text-align:center;font-size:42px;font-weight:900;letter-spacing:-1.8px;line-height:1.05}
+.total-extra{position:relative;z-index:1;display:block;margin:0 14px;padding:5px 12px 20px;
+  border:2px solid #e5c05b;border-top:0;border-radius:0 0 20px 20px;background:linear-gradient(135deg,#fffdf5,#fff5d7);
+  color:#9a6508;text-align:center;font-size:15px;font-weight:900}
+.total-extra.hidden{display:none!important}
+.total-award-card>strong:has(+ .total-extra.hidden){padding-bottom:25px;border-bottom:2px solid #e5c05b;border-radius:20px}
+.total-award-card p{display:none!important}
+@media(max-width:360px){.total-award-card>small{font-size:15px}.total-award-card>strong{font-size:36px}.total-extra{font-size:14px}}
