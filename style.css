@@ -132,3 +132,13 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
   .total-award-card>strong{font-size:37px!important}
   .total-extra{font-size:14px!important;margin-top:11px!important}
 }
+
+/* 2026-10-02 mobile readability patch */
+.next-award{margin:-6px 0 22px;padding:18px 18px;min-height:58px;border-radius:15px;font-size:15px;font-weight:800;line-height:1.25}
+.next-award span{display:flex;align-items:center;gap:4px;white-space:nowrap}
+.next-award strong{font-size:18px;font-weight:900;white-space:nowrap}
+.tier{display:grid;grid-template-columns:minmax(0,1fr) 126px;column-gap:10px;align-items:center}
+.tier .tier-reward{display:grid;grid-template-columns:24px 1fr;align-items:center;width:126px;font-weight:900}
+.tier .tier-gift{display:block;width:24px;text-align:center;line-height:1}
+.tier .tier-money{display:block;text-align:right;white-space:nowrap}
+@media(max-width:380px){.next-award{padding:16px 13px;font-size:14px}.next-award strong{font-size:16px}.tier{grid-template-columns:minmax(0,1fr) 116px}.tier .tier-reward{width:116px;grid-template-columns:22px 1fr}.tier .tier-gift{width:22px}}
