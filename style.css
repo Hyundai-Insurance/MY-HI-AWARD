@@ -161,3 +161,7 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
   .flip-back b{font-size:11px}
   .flip-back em{font-size:9px}
 }
+
+/* 10월 활동량 시상 기간 */
+.award-period{font-size:.72em;font-weight:800;white-space:nowrap;margin-left:5px;color:#667085}
+@media(max-width:380px){.award-period{font-size:.68em;margin-left:3px}}
