@@ -172,3 +172,8 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 .rice-reward b{display:block;font-size:28px;line-height:1.2;font-weight:900;color:#173b68;letter-spacing:-0.02em}
 .rice-reward.done b{font-size:32px;color:#173b68}
 .rice-reward.pending b{font-size:28px;color:#173b68}
+
+/* 2026-10-05 HI-STAR only planner: no October data */
+.rice-reward.no-data{background:#f4f6f8;color:#667085}
+.rice-reward.no-data .rice-icon{display:none}
+.rice-reward.no-data b{font-size:18px;color:#667085}
