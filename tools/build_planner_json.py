@@ -7,7 +7,7 @@ Workbook contract (current October operation):
   - sheet 2: '하이스타' / row 6 headers / data from row 7
 """
 from pathlib import Path
-import zipfile, xml.etree.ElementTree as ET, re, json, shutil
+import zipfile, xml.etree.ElementTree as ET, re, json, shutil, hashlib
 from datetime import datetime, timedelta, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -203,9 +203,11 @@ def main():
     tmp.rename(OUT)
 
     closing = processing_date_from_october(octr)
-    META.write_text(json.dumps({'closingDate': closing}, ensure_ascii=False, indent=2), encoding='utf-8')
+    version = hashlib.sha256(XLSX.read_bytes()).hexdigest()[:12]
+    META.write_text(json.dumps({'closingDate': closing, 'version': version, 'plannerCount': len(data), 'shardCount': len(prefixes)}, ensure_ascii=False, indent=2), encoding='utf-8')
     print(f'Generated {len(prefixes)} shards for {len(data)} planner codes.')
     print(f'Closing date from workbook: {closing}')
+    print(f'Data version: {version}')
 
 if __name__ == '__main__':
     main()

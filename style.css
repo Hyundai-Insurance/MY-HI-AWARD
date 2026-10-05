@@ -165,3 +165,10 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 /* 10월 활동량 시상 기간 */
 .award-period{font-size:.72em;font-weight:800;white-space:nowrap;margin-left:5px;color:#667085}
 @media(max-width:380px){.award-period{font-size:.68em;margin-left:3px}}
+
+/* 2026-10-05 감사물품 문구 수정 */
+.rice-reward{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px 14px;border-radius:16px;background:#fff3ce;gap:6px}
+.rice-reward .rice-icon{font-size:20px;line-height:1}
+.rice-reward b{display:block;font-size:28px;line-height:1.2;font-weight:900;color:#173b68;letter-spacing:-0.02em}
+.rice-reward.done b{font-size:32px;color:#173b68}
+.rice-reward.pending b{font-size:28px;color:#173b68}
