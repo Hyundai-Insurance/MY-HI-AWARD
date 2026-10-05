@@ -11,6 +11,7 @@ on:
       - 'js/**'
       - 'images/**'
       - 'tools/build_planner_json.py'
+      - 'tools/validate_planner_data.py'
       - '.github/workflows/build-web-data.yml'
   workflow_dispatch:
 
@@ -47,7 +48,10 @@ jobs:
             --exclude '_site/' \
             --exclude 'tools/' \
             --exclude 'RESET_ONCE.bat' \
-            --exclude '업데이트방법.txt'
+            --exclude '업데이트방법.txt' \
+            --exclude 'data/MY_HI_AWARD_DATA.xlsx' \
+            --exclude 'data/planners/' \
+            --exclude 'data/planners.json'
           touch _site/.nojekyll
 
       - name: Configure GitHub Pages

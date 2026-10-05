@@ -12,9 +12,10 @@ from datetime import datetime, timedelta, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 XLSX = ROOT / 'data' / 'MY_HI_AWARD_DATA.xlsx'
-OUT = ROOT / 'data' / 'planners'
+OUT = ROOT / 'data' / 'planner'
+OLD_SHARDS = ROOT / 'data' / 'planners'
+OLD_ALL = ROOT / 'data' / 'planners.json'
 META = ROOT / 'data' / 'meta.json'
-ALL = ROOT / 'data' / 'planners.json'
 MAIN = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'
 OFFICE_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
 PKG_REL = 'http://schemas.openxmlformats.org/package/2006/relationships'
@@ -191,25 +192,36 @@ def main():
         d.setdefault('october', None)
         d.setdefault('hiStar', None)
 
-    tmp = OUT.with_name('planners_tmp')
+    # Remove stale generated formats from older versions so they are never deployed.
+    shutil.rmtree(OLD_SHARDS, ignore_errors=True)
+    try:
+        OLD_ALL.unlink()
+    except FileNotFoundError:
+        pass
+
+    # Fast lookup format: one tiny JSON file per planner, grouped by 3-char prefix.
+    # Example: 000008 -> data/planner/000/000008.json
+    tmp = OUT.with_name('planner_tmp')
     shutil.rmtree(tmp, ignore_errors=True)
     tmp.mkdir(parents=True)
-    prefixes = sorted({c[:3] for c in data})
-    for p in prefixes:
-        shard = {c: data[c] for c in data if c.startswith(p)}
-        (tmp / f'{p}.json').write_text(
-            json.dumps(shard, ensure_ascii=False, separators=(',', ':')), encoding='utf-8'
+    for c, rec in data.items():
+        d = tmp / c[:3]
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f'{c}.json').write_text(
+            json.dumps(rec, ensure_ascii=False, separators=(',', ':')), encoding='utf-8'
         )
     shutil.rmtree(OUT, ignore_errors=True)
     tmp.rename(OUT)
 
-    # Single combined file for reliable browser lookup (avoids shard path/cache issues).
-    ALL.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
-
     closing = processing_date_from_october(octr)
     version = hashlib.sha256(XLSX.read_bytes()).hexdigest()[:12]
-    META.write_text(json.dumps({'closingDate': closing, 'version': version, 'plannerCount': len(data), 'shardCount': len(prefixes)}, ensure_ascii=False, indent=2), encoding='utf-8')
-    print(f'Generated {len(prefixes)} shards for {len(data)} planner codes.')
+    META.write_text(json.dumps({
+        'closingDate': closing,
+        'version': version,
+        'plannerCount': len(data),
+        'lookupMode': 'per-code-v1'
+    }, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(f'Generated {len(data)} per-code planner JSON files.')
     print(f'Closing date from workbook: {closing}')
     print(f'Data version: {version}')
 
