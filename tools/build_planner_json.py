@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 XLSX = ROOT / 'data' / 'MY_HI_AWARD_DATA.xlsx'
 OUT = ROOT / 'data' / 'planners'
 META = ROOT / 'data' / 'meta.json'
+ALL = ROOT / 'data' / 'planners.json'
 MAIN = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'
 OFFICE_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
 PKG_REL = 'http://schemas.openxmlformats.org/package/2006/relationships'
@@ -201,6 +202,9 @@ def main():
         )
     shutil.rmtree(OUT, ignore_errors=True)
     tmp.rename(OUT)
+
+    # Single combined file for reliable browser lookup (avoids shard path/cache issues).
+    ALL.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
 
     closing = processing_date_from_october(octr)
     version = hashlib.sha256(XLSX.read_bytes()).hexdigest()[:12]
