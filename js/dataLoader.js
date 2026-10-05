@@ -20,10 +20,12 @@ const dataLoader={
     code=this.norm(code);
     const prefix=code.slice(0,3);
     const url=`${this.base()}data/planner/${encodeURIComponent(prefix)}/${encodeURIComponent(code)}.json?ts=${Date.now()}`;
-    const r=await fetch(url,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
+    const r=await fetch(url,{cache:'no-store'});
     if(r.status===404)return null;
     if(!r.ok)throw new Error(`PLANNER_LOAD_FAILED_${r.status}`);
     const rec=await r.json();
-    return rec&&this.norm(rec.code)===code?rec:null;
+    if(!rec)return null;
+    const actual=this.norm(rec?.october?.code ?? rec?.hiStar?.code ?? rec?.code ?? '');
+    return actual===code?rec:null;
   }
 };
