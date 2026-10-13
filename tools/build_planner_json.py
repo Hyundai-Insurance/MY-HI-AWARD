@@ -138,12 +138,13 @@ def main():
     with zipfile.ZipFile(XLSX) as z:
         ss = shared_strings(z)
         targets = sheet_targets(z)
-        missing = [name for name in ('8일 마감', '10월', '하이스타') if name not in targets]
+        missing = [name for name in ('8일 마감', '10월', '하이스타', '하이포인트') if name not in targets]
         if missing:
             raise SystemExit('Missing required sheet(s): ' + ', '.join(missing))
         fixedr = rows(z, targets['8일 마감'], ss)
         octr = rows(z, targets['10월'], ss)
         hsr = rows(z, targets['하이스타'], ss)
+        point_rows = rows(z, targets['하이포인트'], ss)
 
     data = {}
 
@@ -206,11 +207,30 @@ def main():
             'joker': str(get(r, 31) or '').strip()
         }
 
+    # HI-POINT sheet: row 1 headers, row 2+ planner rows.
+    # Data is already calculated by the workbook; do not recalculate point rewards.
+    for rn, r in point_rows.items():
+        if rn < 2:
+            continue
+        c = norm(get(r, 4))
+        if not re.fullmatch(r'[0-9A-Z]{6}', c):
+            continue
+        intro = str(get(r, 9) or '').strip().upper()
+        data.setdefault(c, {})['hiPoint'] = {
+            'code': c,
+            'region': get(r, 0), 'branch': get(r, 2),
+            'meeting': num(get(r, 5)), 'targetDb': num(get(r, 6)),
+            'consent': num(get(r, 7)), 'sms': num(get(r, 8)),
+            'recruit': 1 if intro in ('Y', 'YES', '참여', '1', 'TRUE') else 0,
+            'monthlyPoints': max(0, num(get(r, 10)))
+        }
+
     for c, d in data.items():
         d['code'] = c
         d.setdefault('october', None)
         d.setdefault('rice', None)
         d.setdefault('hiStar', None)
+        d.setdefault('hiPoint', None)
 
     # Remove stale generated formats from older versions so they are never deployed.
     shutil.rmtree(OLD_SHARDS, ignore_errors=True)
