@@ -10,6 +10,8 @@ Workbook contract (current October operation):
 from pathlib import Path
 import zipfile, xml.etree.ElementTree as ET, re, json, shutil, hashlib
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 XLSX = ROOT / 'data' / 'MY_HI_AWARD_DATA.xlsx'
@@ -108,21 +110,25 @@ def rows(z, target, shared):
     return out
 
 
-def processing_date_from_october(octr):
-    """Use the workbook's processing date so the UI date changes only with data."""
-    # Current sheet: row 2 = ['처리일자', 20261001]
-    raw = get(octr.get(2, []), 1)
-    if raw is not None:
-        s = str(raw).strip()
-        if s.endswith('.0'):
-            s = s[:-2]
-        if re.fullmatch(r'\d{8}', s):
-            try:
-                return datetime.strptime(s, '%Y%m%d').date().isoformat()
-            except ValueError:
-                pass
-    # Do not invent a new processing date while the actual data is unchanged.
-    return None
+def closing_date_from_excel_update():
+    """Use the last Git commit that changed the Excel file (in Korean local time).
+
+    Only Excel uploads advance this date; visits and code-only deployments do not.
+    Saturdays, Sundays and Mondays resolve to the preceding Friday.
+    """
+    try:
+        stamp = subprocess.check_output(
+            ['git', 'log', '-1', '--format=%cI', '--', 'data/MY_HI_AWARD_DATA.xlsx'],
+            cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
+        if not stamp:
+            return None
+        updated = datetime.fromisoformat(stamp).astimezone(ZoneInfo('Asia/Seoul')).date()
+        closing = updated - timedelta(days=1)
+        while closing.weekday() >= 5:
+            closing -= timedelta(days=1)
+        return closing.isoformat()
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return None
 
 
 def main():
@@ -227,7 +233,7 @@ def main():
     shutil.rmtree(OUT, ignore_errors=True)
     tmp.rename(OUT)
 
-    closing = processing_date_from_october(octr)
+    closing = closing_date_from_excel_update()
     version = hashlib.sha256(XLSX.read_bytes()).hexdigest()[:12]
     META.write_text(json.dumps({
         'closingDate': closing,
@@ -238,7 +244,7 @@ def main():
         'lookupMode': 'per-code-v1'
     }, ensure_ascii=False, indent=2), encoding='utf-8')
     print(f'Generated {len(data)} per-code planner JSON files.')
-    print(f'Closing date from workbook: {closing}')
+    print(f'Closing date (last Excel commit, previous weekday KST): {closing}')
     print(f'Data version: {version}')
 
 if __name__ == '__main__':
