@@ -22,9 +22,7 @@ if(!r){$('thanks-current').textContent='10월 실적 데이터 없음';$('thanks
   $('hp-rate').textContent=pctText;
   $('hp-fill').style.width=pct+'%';
   const badge=$('hp-badge');
-  badge.textContent=fmt(pts)+'P';
-  const badgePct=Math.max(8,Math.min(92,pct)); badge.style.left=`${badgePct}%`;
-  badge.style.display=pts>0?'inline-flex':'none';
+  badge.style.display='none';
   requestAnimationFrame(()=>this.layoutHPLinks());
   },layoutHPLinks(){
   const orbit=document.querySelector('.hp-orbit');
@@ -46,13 +44,18 @@ if(!r){$('thanks-current').textContent='10월 실적 데이터 없음';$('thanks
     const dx=mx-cx,dy=my-cy;
     const dist=Math.hypot(dx,dy)||1;
     const ux=dx/dist, uy=dy/dist;
-    const insetCore=6, insetMission=10;
-    const x1=cx+ux*(coreR+insetCore);
-    const y1=cy+uy*(coreR+insetCore);
-    const x2=mx-ux*(missionR+insetMission);
-    const y2=my-uy*(missionR+insetMission);
-    const len=Math.max(12, Math.hypot(x2-x1,y2-y1));
-    const angle=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+    const insetCore=10, insetMission=12;
+    const sx=cx+ux*(coreR+insetCore);
+    const sy=cy+uy*(coreR+insetCore);
+    const ex=mx-ux*(missionR+insetMission);
+    const ey=my-uy*(missionR+insetMission);
+    const gap=Math.hypot(ex-sx,ey-sy);
+    const desiredLen=26;
+    const len=Math.max(14, Math.min(desiredLen, gap-4));
+    const midx=(sx+ex)/2, midy=(sy+ey)/2;
+    const x1=midx-ux*(len/2);
+    const y1=midy-uy*(len/2);
+    const angle=Math.atan2(uy,ux)*180/Math.PI;
     const el=document.createElement('span');
     el.className='hp-link';
     el.style.width=`${len}px`;
