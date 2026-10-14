@@ -22,7 +22,7 @@ if(!r){$('thanks-current').textContent='10월 실적 데이터 없음';$('thanks
   $('hp-rate').textContent=pctText;
   $('hp-fill').style.width=pct+'%';
   const badge=$('hp-badge');
-  badge.textContent=fmt(pts)+'P';
-  badge.style.left=`calc(${pct}% - 30px)`;
+  badge.textContent=pctText;
+  const badgePct=Math.max(8,Math.min(92,pct)); badge.style.left=`${badgePct}%`;
   badge.style.display=pts>0?'inline-flex':'none';
   },shortfall(x){let rule=x.rule||'';const nums=rule.match(/[\d,.]+/);if(!nums)return '조건 확인';let target=Number(nums[0].replaceAll(',',''));if(rule.includes('만원'))target*=10000;const gap=Math.max(target-Number(x.current||0),0);if(gap<=0)return '조건 확인';return x.unit==='원'?won(gap)+' 부족':gap.toLocaleString('ko-KR')+(x.unit||'')+' 부족'},val(x){return x.unit==='원'?won(x.current):Number(x.current||0).toLocaleString('ko-KR')+(x.unit||'')},lines(a){const z=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];return z.filter(q=>q.every(i=>a[i])).length}};addEventListener('DOMContentLoaded',()=>app.init());

@@ -192,12 +192,12 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 .hp-path-main{inset:16% 10%;border:2px dotted #bed3ec}
 .hp-path-sub{inset:24% 18%;border:1px solid rgba(245,196,86,.24)}
 .hp-sparkle{position:absolute;color:#f5c85d;font-size:21px;line-height:1;opacity:.96;text-shadow:0 0 10px rgba(251,219,128,.45)}
-.hp-s1{top:19%;left:15%}.hp-s2{top:17%;right:17%}.hp-s3{left:9%;bottom:26%}.hp-s4{right:10%;bottom:25%}.hp-s5{top:47%;right:6%}
+.hp-s1{top:18%;left:12%}.hp-s2{top:16%;right:15%}.hp-s3{left:8%;bottom:23%}.hp-s4{right:8%;bottom:23%}.hp-s5{top:48%;right:4.5%}
 .hp-mission{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:26%;aspect-ratio:1;border:2px solid #f2b02d;border-radius:50%;background:linear-gradient(145deg,#fff,#fffaf0);color:#183b67;box-shadow:0 8px 22px rgba(18,57,109,.10);text-align:center;padding:10px 6px;box-sizing:border-box;line-height:1.12;z-index:2}
 .hp-mission .hp-ico{font-size:clamp(16px,3.8vw,24px);line-height:1;color:#e3a21b;filter:saturate(.85)}
 .hp-mission b{font-size:clamp(12px,2.65vw,17px);word-break:keep-all}
 .hp-mission strong{font-size:clamp(27px,6.4vw,40px);color:#142f58;font-weight:900;letter-spacing:-1px;line-height:1}
-.hp-mission small{font-size:clamp(10px,2.2vw,13px);color:#607998}
+.hp-mission small{display:none}
 .hp-m1{top:1%;left:50%;transform:translateX(-50%)}
 .hp-m2{top:22%;right:1.5%}
 .hp-m3{bottom:6%;right:11%}
@@ -210,20 +210,20 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 .hp-link{position:absolute;display:block;height:2px;background:#f2bd43;border-radius:3px;z-index:1;box-shadow:0 0 0 4px rgba(242,189,67,.08)}
 .hp-link:before,.hp-link:after{content:"";position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#f2bd43;transform:translateY(-50%);box-shadow:0 0 0 3px rgba(255,255,255,.9)}
 .hp-link:before{left:-2px}.hp-link:after{right:-2px}
-.hp-link-1{width:34px;left:50%;top:26.5%;transform:translateX(-50%) rotate(90deg)}
-.hp-link-2{width:36px;left:67.6%;top:39.2%;transform:rotate(24deg)}
-.hp-link-3{width:36px;left:63.8%;top:64.9%;transform:rotate(-35deg)}
-.hp-link-4{width:36px;left:30%;top:64.9%;transform:rotate(35deg)}
-.hp-link-5{width:36px;left:26.2%;top:39.2%;transform:rotate(-24deg)}
+.hp-link-1{width:38px;left:50%;top:26%;transform:translateX(-50%) rotate(90deg)}
+.hp-link-2{width:46px;left:59.2%;top:39.5%;transform:rotate(-28deg)}
+.hp-link-3{width:46px;left:55.6%;top:60.5%;transform:rotate(29deg)}
+.hp-link-4{width:46px;left:21.4%;top:60.5%;transform:rotate(-29deg)}
+.hp-link-5{width:46px;left:17.5%;top:39.5%;transform:rotate(28deg)}
 .hp-progress-card{background:#fff8e9;border:1px solid #f3e3b5;border-radius:24px;padding:19px 15px;margin-top:10px;color:#183b67}
 .hp-progress-card h3{margin:0;font-size:19px}.hp-progress-card p{color:#6b819e;font-size:13px;margin:7px 0 15px}
 .hp-metrics{display:grid;grid-template-columns:1fr 1.12fr .78fr;gap:7px}
 .hp-metrics>div{background:white;border-radius:13px;padding:11px 4px;text-align:center;display:flex;flex-direction:column;gap:7px}.hp-metrics small{font-size:11px;color:#607998}.hp-metrics strong{font-size:clamp(12px,3.5vw,18px);white-space:nowrap;color:#153b6a}.hp-metrics>div:last-child strong{color:#eba500}
 .hp-track{position:relative;height:16px;background:#dce3eb;border-radius:16px;overflow:visible;margin-top:21px}
 .hp-fill{background:linear-gradient(90deg,#ffc839,#ff9b16);height:100%;width:0%;border-radius:16px;transition:width .5s}
-.hp-badge{position:absolute;top:-38px;left:0;display:none;align-items:center;justify-content:center;min-width:76px;height:34px;padding:0 12px;border-radius:18px;background:#173b68;color:#fff;font-weight:800;font-size:14px;box-shadow:0 4px 12px rgba(23,59,104,.2)}
-.hp-badge:after{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);border:8px solid transparent;border-top-color:#173b68}
+.hp-badge{position:absolute;top:-32px;left:0;display:none;align-items:center;justify-content:center;min-width:52px;height:28px;padding:0 10px;border-radius:16px;background:#173b68;color:#fff;font-weight:800;font-size:13px;transform:translateX(-50%);box-shadow:0 4px 10px rgba(23,59,104,.18)}
+.hp-badge:after{content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);border:6px solid transparent;border-top-color:#173b68}
 .hp-ends{display:flex;justify-content:space-between;font-size:12px;margin-top:7px;color:#6380a6}
-@media(max-width:420px){.hp-summary-cards{gap:10px}.hp-summary-card{padding:15px 10px}.hp-summary-card small{font-size:11px}.hp-orbit{aspect-ratio:1/1.04}.hp-mission{width:27%}.hp-m2{right:1%}.hp-m5{left:1%}.hp-m3,.hp-m4{bottom:6%}.hp-core{width:40%}.hp-link-2{left:68.2%;top:39%}.hp-link-3{left:64.6%;top:64.6%}.hp-link-4{left:29.4%;top:64.6%}.hp-link-5{left:25.8%;top:39%}}
-@media(max-width:360px){.hp-core{width:42%}.hp-mission{width:28.5%}.hp-orbit{aspect-ratio:1/1.08}.hp-core strong{font-size:24px}.hp-summary-card strong{font-size:28px}.hp-metrics strong{font-size:12px}.hp-metrics{gap:4px}.hp-badge{min-width:68px;font-size:13px}.hp-link{width:30px}.hp-link-2{left:68.5%;top:39.2%}.hp-link-3{left:65.5%;top:64.2%}.hp-link-4{left:28.5%;top:64.2%}.hp-link-5{left:25.5%;top:39.2%}}
+@media(max-width:420px){.hp-summary-cards{gap:10px}.hp-summary-card{padding:15px 10px}.hp-summary-card small{font-size:11px}.hp-orbit{aspect-ratio:1/1.04}.hp-mission{width:27%}.hp-m2{right:1%}.hp-m5{left:1%}.hp-m3,.hp-m4{bottom:6%}.hp-core{width:40%}.hp-link-1{width:35px;top:26.2%}.hp-link-2{width:42px;left:60.5%;top:39.9%}.hp-link-3{width:42px;left:56.6%;top:60.4%}.hp-link-4{width:42px;left:20.7%;top:60.4%}.hp-link-5{width:42px;left:16.9%;top:39.9%}}
+@media(max-width:360px){.hp-core{width:42%}.hp-mission{width:28.5%}.hp-orbit{aspect-ratio:1/1.08}.hp-core strong{font-size:24px}.hp-summary-card strong{font-size:28px}.hp-metrics strong{font-size:12px}.hp-metrics{gap:4px}.hp-badge{min-width:46px;font-size:12px}.hp-link-1{width:32px;top:26.4%}.hp-link{width:36px}.hp-link-2{left:60.8%;top:40.1%}.hp-link-3{left:57.2%;top:60.1%}.hp-link-4{left:19.6%;top:60.1%}.hp-link-5{left:16%;top:40.1%}}
 
