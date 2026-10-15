@@ -2,10 +2,9 @@
 """MY HI-AWARD: data/MY_HI_AWARD_DATA.xlsx -> planner JSON shards.
 
 Python standard library only, so GitHub Actions needs no pip install.
-Workbook contract (current October operation):
-  - sheet '8일 마감' / row 5 headers / rows 6+: fixed activity award
-  - sheet '10월' / row 5 headers / rows 6+: live rice award
+Workbook contract (HI-STAR + HI-POINT only):
   - sheet '하이스타' / row 6 headers / rows 7+: HI-STAR
+  - sheet '하이포인트' / row 1 headers / rows 2+: HI-POINT
 """
 from pathlib import Path
 import zipfile, xml.etree.ElementTree as ET, re, json, shutil, hashlib
@@ -138,39 +137,13 @@ def main():
     with zipfile.ZipFile(XLSX) as z:
         ss = shared_strings(z)
         targets = sheet_targets(z)
-        missing = [name for name in ('8일 마감', '10월', '하이스타', '하이포인트') if name not in targets]
+        missing = [name for name in ('하이스타', '하이포인트') if name not in targets]
         if missing:
             raise SystemExit('Missing required sheet(s): ' + ', '.join(missing))
-        fixedr = rows(z, targets['8일 마감'], ss)
-        octr = rows(z, targets['10월'], ss)
         hsr = rows(z, targets['하이스타'], ss)
         point_rows = rows(z, targets['하이포인트'], ss)
 
     data = {}
-
-    # Fixed activity award: '8일 마감', rows 6+ and column F monthly premium.
-    for rn, r in fixedr.items():
-        if rn < 6:
-            continue
-        c = norm(get(r, 3))
-        if not c:
-            continue
-        data.setdefault(c, {})['october'] = {
-            'region': get(r, 0), 'branch': get(r, 1), 'name': get(r, 2), 'code': c,
-            'careerMonth': num(get(r, 4), None), 'monthlyPremium': num(get(r, 5))
-        }
-
-    # Rice gift uses the *current* '10월' sheet, independently of the frozen activity sheet.
-    for rn, r in octr.items():
-        if rn < 6:
-            continue
-        c = norm(get(r, 3))
-        if not c:
-            continue
-        data.setdefault(c, {})['rice'] = {
-            'region': get(r, 0), 'branch': get(r, 1), 'name': get(r, 2), 'code': c,
-            'careerMonth': num(get(r, 4), None), 'monthlyPremium': num(get(r, 5))
-        }
 
     # HI-STAR: row 6 headers, row 7+ planner rows.
     # Each mission uses the workbook's achievement Y/N as the source of truth.
@@ -227,8 +200,6 @@ def main():
 
     for c, d in data.items():
         d['code'] = c
-        d.setdefault('october', None)
-        d.setdefault('rice', None)
         d.setdefault('hiStar', None)
         d.setdefault('hiPoint', None)
 
@@ -257,8 +228,6 @@ def main():
     version = hashlib.sha256(XLSX.read_bytes()).hexdigest()[:12]
     META.write_text(json.dumps({
         'closingDate': closing,
-        'activityClosingDate': '2026-10-08',
-        'riceClosingDate': '2026-10-16',
         'version': version,
         'plannerCount': len(data),
         'lookupMode': 'per-code-v1'
