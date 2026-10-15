@@ -224,3 +224,12 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 @media(max-width:420px){.hp-summary-cards{gap:10px}.hp-summary-card{padding:15px 10px}.hp-summary-card small{font-size:11px}.hp-orbit{aspect-ratio:1/1.04}.hp-mission{width:27%}.hp-m2{right:1%}.hp-m5{left:1%}.hp-m3,.hp-m4{bottom:6%}.hp-core{width:40%}}
 @media(max-width:360px){.hp-core{width:42%}.hp-mission{width:28.5%}.hp-orbit{aspect-ratio:1/1.08}.hp-core strong{font-size:24px}.hp-summary-card strong{font-size:28px}.hp-metrics strong{font-size:12px}.hp-metrics{gap:4px}.hp-badge{display:none !important}}
 
+
+/* 2026-10-15: HI-STAR + HI-POINT only; center-aligned equal-sized totals */
+.total-award-card.hi-summary-total{padding:24px 12px 23px!important;overflow:hidden!important}
+.total-award-card.hi-summary-total>small{margin:0 0 13px!important;font-size:clamp(14px,4vw,17px)!important;line-height:1.35!important;letter-spacing:-.4px!important;text-align:center!important}
+.total-award-card.hi-summary-total>small::before{content:none!important}
+.hi-total-line{display:flex;justify-content:center;align-items:baseline;gap:clamp(5px,2vw,12px);width:100%;min-width:0;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hi-total-line>strong{display:block;margin:0!important;padding:0!important;border:0!important;font-size:clamp(19px,5.1vw,29px)!important;font-weight:900!important;line-height:1.2!important;letter-spacing:-1.1px!important;color:#0d376f!important}
+.hi-total-plus{font-size:clamp(19px,5vw,29px);font-weight:900;line-height:1.2;color:#d69710;flex:none}
+@media(max-width:355px){.hi-total-line{gap:5px}.hi-total-line>strong{font-size:clamp(17px,5vw,21px)!important;letter-spacing:-.8px!important}}
