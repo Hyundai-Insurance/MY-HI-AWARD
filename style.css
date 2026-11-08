@@ -248,5 +248,5 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 #result header h1{font-size:clamp(17px,4.6vw,24px);white-space:nowrap;letter-spacing:-.6px}
 
 /* V7: original yellow palette restored; only top November total is vivid yellow. */
-.total-award-card.nov-top-total{background:#FFD000!important;border-color:#e5b900!important;color:#173b68!important}
+.total-award-card.nov-top-total{background:#EAB74C!important;border-color:#EAB74C!important;color:#173b68!important}
 .nov-top-total>small,.nov-top-total #total-cash,.nov-top-total .nov-top-note{color:#173b68!important}
