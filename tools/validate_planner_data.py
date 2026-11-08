@@ -22,7 +22,7 @@ for f in files:
     code=f.stem
     if rec.get('code')!=code or f.parent.name!=code[:3]:
         errors.append(f'{code}: code/path mismatch')
-    if not (rec.get('hiStar') or rec.get('hiPoint')):
+    if not (rec.get('november') or rec.get('hiStar') or rec.get('hiPoint')):
         errors.append(f'{code}: no HI-STAR or HI-POINT data')
     hs+=bool(rec.get('hiStar'))
     hp+=bool(rec.get('hiPoint'))

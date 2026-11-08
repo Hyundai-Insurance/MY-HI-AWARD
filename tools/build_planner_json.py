@@ -109,11 +109,25 @@ def rows(z, target, shared):
     return out
 
 
+def previous_weekday(updated):
+    closing = updated - timedelta(days=1)
+    while closing.weekday() >= 5:
+        closing -= timedelta(days=1)
+    return closing.isoformat()
+
+
+def normalize_closing(value):
+    closing = datetime.fromisoformat(value).date()
+    while closing.weekday() >= 5:
+        closing -= timedelta(days=1)
+    return closing.isoformat()
+
+
 def closing_date_from_excel_update():
     """Use the last Git commit that changed the Excel file (in Korean local time).
 
     Only Excel uploads advance this date; visits and code-only deployments do not.
-    Saturdays, Sundays and Mondays resolve to the preceding Friday.
+    Previous weekday, skipping Saturdays and Sundays.
     """
     try:
         stamp = subprocess.check_output(
@@ -122,10 +136,7 @@ def closing_date_from_excel_update():
         if not stamp:
             return None
         updated = datetime.fromisoformat(stamp).astimezone(ZoneInfo('Asia/Seoul')).date()
-        closing = updated - timedelta(days=1)
-        while closing.weekday() >= 5:
-            closing -= timedelta(days=1)
-        return closing.isoformat()
+        return previous_weekday(updated)
     except (OSError, ValueError, subprocess.CalledProcessError):
         return None
 
@@ -137,13 +148,35 @@ def main():
     with zipfile.ZipFile(XLSX) as z:
         ss = shared_strings(z)
         targets = sheet_targets(z)
-        missing = [name for name in ('하이스타', '하이포인트') if name not in targets]
+        missing = [name for name in ('플래너별', '하이스타', '하이포인트') if name not in targets]
         if missing:
             raise SystemExit('Missing required sheet(s): ' + ', '.join(missing))
+        november_rows = rows(z, targets['플래너별'], ss)
         hsr = rows(z, targets['하이스타'], ss)
         point_rows = rows(z, targets['하이포인트'], ss)
 
     data = {}
+
+    # November: preserve cached Excel results; the supplied V formula references O, not G.
+    for rn, r in november_rows.items():
+        if rn < 6:
+            continue
+        c = norm(get(r, 5))
+        if not re.fullmatch(r'[0-9A-Z]{6}', c):
+            continue
+        if c in data:
+            raise ValueError(f'Duplicate November code: {c}')
+        required = [7,9,10,13,14,19,21]
+        if any(get(r, i) is None or str(get(r,i)).startswith('#') for i in required):
+            raise ValueError(f'Missing/error cached Excel value: row {rn}; save recalculated Excel first')
+        data[c] = {'november': {
+            'code': c, 'region':get(r,1), 'branch':get(r,2), 'name':get(r,4),
+            'careerMonth':num(get(r,6)), 'targets':[num(get(r,i), None) for i in (7,8,9)],
+            'monthly':num(get(r,10)), 'sourceNext':get(r,11), 'sourceTier':get(r,21),
+            'specialFlag':num(get(r,14)) == 1,
+            'weeks':[{'week':1,'performance':num(get(r,13)), 'sourceAward':num(get(r,19))}],
+            'ownContract':num(get(r,17)), 'sourceRow':rn
+        }}
 
     # HI-STAR: row 6 headers, row 7+ planner rows.
     # Each mission uses the workbook's achievement Y/N as the source of truth.
@@ -224,8 +257,13 @@ def main():
     shutil.rmtree(OUT, ignore_errors=True)
     tmp.rename(OUT)
 
-    closing = closing_date_from_excel_update()
     version = hashlib.sha256(XLSX.read_bytes()).hexdigest()[:12]
+    previous = json.loads(META.read_text()) if META.exists() else {}
+    closing = previous.get('closingDate') if previous.get('version') == version else None
+    if closing:
+        closing = normalize_closing(closing)
+    else:
+        closing = closing_date_from_excel_update() or previous_weekday(datetime.now(ZoneInfo('Asia/Seoul')).date())
     META.write_text(json.dumps({
         'closingDate': closing,
         'version': version,

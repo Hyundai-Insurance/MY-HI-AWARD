@@ -12,6 +12,8 @@ on:
       - 'images/**'
       - 'tools/build_planner_json.py'
       - 'tools/validate_planner_data.py'
+      - 'tools/test_november.cjs'
+      - 'tools/test_ui.cjs'
       - '.github/workflows/build-web-data.yml'
   workflow_dispatch:
 
@@ -38,6 +40,9 @@ jobs:
 
       - name: Validate critical planner codes
         run: python tools/validate_planner_data.py
+
+      - name: Verify November awards against Excel
+        run: node tools/test_november.cjs
 
       - name: Prepare Pages site
         shell: bash

@@ -5,7 +5,7 @@ const dataLoader={
     return /^\d+$/.test(s)?s.padStart(6,'0'):s;
   },
   base(){
-    return `${location.origin}/MY-HI-AWARD/`;
+    return new URL('./',location.href).href;
   },
   async init(){
     try{
