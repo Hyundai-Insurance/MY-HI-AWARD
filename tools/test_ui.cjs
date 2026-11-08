@@ -6,3 +6,16 @@ let elements={november:new Element()};
 const context={console,URL,location:{href:'http://localhost/MY-HI-AWARD/',origin:'http://localhost'},document:{getElementById:id=>elements[id]},fetch:async(url)=>{const relative=new URL(url).pathname.replace('/MY-HI-AWARD/','');try{const text=fs.readFileSync(path.join(root,relative),'utf8');return{ok:true,status:200,json:async()=>JSON.parse(text)}}catch{return{ok:false,status:404}}}};
 vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(root,'js/dataLoader.js'),'utf8')+'\n globalThis.loader=dataLoader;',context);vm.runInContext(fs.readFileSync(path.join(root,'js/november.js'),'utf8')+'\n globalThis.N=November;',context);
 (async()=>{await context.loader.init();assert.equal(context.loader.meta.closingDate,'2026-11-06');assert.equal(await context.loader.get('ZZZZZZ'),null);let r=await context.loader.get('8');assert.equal(r.code,'000008');assert(r.hiStar&&r.hiPoint&&r.november);context.N.render(r.november);assert.equal((elements.november.innerHTML.match(/class="nov-week pending"/g)||[]).length,4);elements['nov-monthly'].value='2000000';elements['nov-week1'].value='500000';elements['nov-monthly'].oninput();assert(elements['nov-output'].innerHTML.includes('800,000원'));elements['nov-reset'].onclick();assert.equal(Number(elements['nov-monthly'].value),r.november.monthly);assert.equal(Number(elements['nov-week1'].value),r.november.weeks[0].performance);elements['nov-monthly'].value='';elements['nov-monthly'].oninput();assert(elements['nov-output'].textContent.includes('정수'));context.N.render(null);assert(elements.november.innerHTML.includes('데이터가 없습니다'));console.log('Integration passed: padded/unknown code, all three sheet lookup, simulation input/reset/empty, pending weeks, date metadata');})().catch(e=>{console.error(e);process.exitCode=1});
+// Presentation and November-only top total regression checks.
+const index=fs.readFileSync(path.join(root,'index.html'),'utf8');assert(!index.includes('id="total-points"'));assert(index.includes('11월 시상금 한눈에 보기!'));
+elements['total-cash']=new Element();elements['total-note']=new Element();
+context.addEventListener=()=>{};vm.runInContext(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\n globalThis.testApp=app;',context);
+context.testApp.data={november:{weeks:[{sourceAward:130000},{sourceAward:260000}]}};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'390,000원');
+context.testApp.data={};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'-');
+for(const [monthly,tier] of [[299999,0],[300000,1],[400000,2],[500000,3]]){
+ const p={monthly,targets:[300000,400000,500000],specialFlag:false,sourceTier:'',weeks:[{performance:100000,sourceAward:100000}]};
+ context.N.render(p);const html=elements.november.innerHTML;
+ assert.equal((html.match(/aria-current="step"/g)||[]).length,tier===0?0:1);
+ const result=elements['nov-output'].innerHTML;assert.equal((result.match(/nov-result-card/g)||[]).length,3);assert(result.includes('nov-result-total'));
+}
+console.log('Presentation passed: November-only multiweek total, empty state, single current tier, separated result cards');

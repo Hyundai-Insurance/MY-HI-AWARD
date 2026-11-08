@@ -31,13 +31,14 @@ const November = {
     const money=v=>this.money(v), labels=['구간 미달성','기본','10UP','20UP'];
     const calc=this.calculate(p,p.monthly,p.weeks.map(w=>w.performance));
     const next=this.next(p,p.monthly);
-    el.insertAdjacentHTML('beforeend',`<div class="nov-targets">${p.targets.map((v,i)=>`<div><small>${['기본','10UP','20UP'][i]}</small><b>${v==null?'대상 없음':money(v)}</b></div>`).join('')}</div>
+    el.insertAdjacentHTML('beforeend',`<div class="nov-tier-caption">현재 달성 구간 <strong>${labels[calc.tier]}</strong>${calc.tier===0?'<span>기본 목표를 향해 도전 중</span>':''}</div><div class="nov-targets">${p.targets.map((v,i)=>`<div class="nov-target ${calc.tier===i+1?'is-current':''}" ${calc.tier===i+1?'aria-current="step"':''}><span class="nov-tier-tag">${calc.tier===i+1?'★ 현재 구간':v==null?'대상 없음':'목표'}</span><small>${['기본','10UP','20UP'][i]}</small><b>${v==null?'대상 없음':money(v)}</b></div>`).join('')}</div>
       <div class="nov-current"><small>월 누계 실적 (관리사항 미적용)</small><strong>${money(p.monthly)}</strong><b>${p.sourceTier} · 지급률 ${calc.rate*100}%</b><p>${next?`${next.label} 목표까지 ${money(next.gap)} 부족`:'20UP 구간 달성'}</p></div>
       <p class="guide">월 누계 구간을 기준으로 공개 주차 전체의 시상금을 다시 계산합니다. 구간 미달성 시에도 엑셀 수식의 기본 지급률 100%를 적용합니다.</p>
       <div class="nov-week"><b>1주차 · 11/1~6</b><span>관리사항 적용 실적 ${money(p.weeks[0].performance)}</span><strong>예상 시상금 ${money(p.weeks[0].sourceAward)}</strong></div>
       ${[2,3,4,5].map(w=>`<div class="nov-week pending"><b>${w}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`).join('')}
       <div class="nov-current"><small>누적 예상 시상금 · 공개 주차 합계</small><strong>${money(p.weeks.reduce((a,w)=>a+w.sourceAward,0))}</strong></div>
-      <details class="nov-sim" open><summary>예상 실적 시뮬레이션</summary><p class="guide">예상 최종 실적을 입력하세요. 월 누계와 관리사항 적용 주차 실적은 별도 기준이므로 각각 입력합니다. 실제 실적은 변경되지 않습니다.</p>
+      <div class="section-title nov-sim-title"><span aria-hidden="true">✦</span><div><h2>예상 시뮬레이션</h2><p>현재 기준으로 내 시상금 예측해보기!</p></div></div>
+      <details class="nov-sim" open><summary>예상 실적 입력하기</summary><p class="guide">예상 최종 실적을 입력하세요. 월 누계와 관리사항 적용 주차 실적은 별도 기준이므로 각각 입력합니다. 실제 실적은 변경되지 않습니다.</p>
       <label for="nov-monthly">예상 월 누계 실적 (원)</label><input id="nov-monthly" type="number" min="0" step="1" value="${p.monthly}">
       <label for="nov-week1">예상 1주차 실적 (관리사항 적용, 원)</label><input id="nov-week1" type="number" min="0" step="1" value="${p.weeks[0].performance}">
       <button id="nov-reset" type="button">실제 실적으로 초기화</button><div id="nov-output" aria-live="polite"></div></details>
@@ -46,7 +47,7 @@ const November = {
     const update=()=>{
       if(m.value===''||w.value===''||!m.validity.valid||!w.validity.valid){out.textContent='0 이상의 정수 실적을 입력해주세요.';return;}
       const v=Number(m.value),r=this.calculate(p,v,[Number(w.value)]),n=this.next(p,v);
-      out.innerHTML=`<b>예상 구간 ${labels[r.tier]} · ${r.rate*100}%</b><p>${n?`${n.label} 목표까지 ${money(n.gap)} 부족`:'20UP 구간 달성'}</p><p>1주차 재계산 시상금 <b>${money(r.awards[0])}</b></p><small>누적 예상 시상금 (공개 주차)</small><strong>${money(r.total)}</strong><p>현재 대비 ${money(r.total-p.weeks[0].sourceAward)}</p>`;
+      out.innerHTML=`<div class="nov-sim-result-title">예상 결과</div><div class="nov-result-grid"><div class="nov-result-card tier-result"><small>예상 구간</small><strong>${labels[r.tier]}</strong><span>지급률 ${r.rate*100}%</span></div><div class="nov-result-card"><small>목표 달성 현황</small><strong>${r.tier===0?'기본 도전 중':labels[r.tier]+' 달성'}</strong><span>${n?`${n.label}까지 ${money(n.gap)} 부족`:'최고 구간 달성 완료'}</span></div><div class="nov-result-card week-result"><small>1주차 예상 시상금</small><strong>${money(r.awards[0])}</strong><span>예상 월 누계 구간으로 재계산</span></div></div><div class="nov-result-total"><small>누적 예상 시상금</small><strong>${money(r.total)}</strong><span>공개 주차 합계 · 현재 대비 ${r.total-p.weeks[0].sourceAward>0?'+':''}${money(r.total-p.weeks[0].sourceAward)}</span></div>`;
     };
     m.oninput=w.oninput=update;document.getElementById('nov-reset').onclick=()=>{m.value=p.monthly;w.value=p.weeks[0].performance;update();};update();
   }
