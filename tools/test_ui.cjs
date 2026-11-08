@@ -12,10 +12,10 @@ elements['total-cash']=new Element();elements['total-note']=new Element();
 context.addEventListener=()=>{};vm.runInContext(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\n globalThis.testApp=app;',context);
 context.testApp.data={november:{monthly:400000,targets:[300000,400000,500000],specialFlag:false,weeks:[{week:1,performance:100000},{week:2,performance:200000,awardBasis:200000,tierRates:[0.8,0.8,1.1,1.4]}]}};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'350,000원');
 context.testApp.data={};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'-');
-for(const [monthly,tier] of [[299999,0],[300000,1],[400000,2],[500000,3]]){
+for(const [monthly,tier] of [[299999,1],[300000,1],[400000,2],[500000,3]]){
  const p={monthly,targets:[300000,400000,500000],specialFlag:false,sourceTier:'',weeks:[{week:1,performance:100000,sourceAward:100000}]};
  context.N.render(p);const html=elements.november.innerHTML;
- assert.equal((html.match(/aria-current="step"/g)||[]).length,tier===0?0:1);
+ assert.equal((html.match(/aria-current="step"/g)||[]).length,1);assert(!html.includes('구간 미달성'));if(monthly<300000){assert(elements['nov-output'].innerHTML.includes('기본 적용'));}
  const result=elements['nov-output'].innerHTML;assert.equal((result.match(/nov-result-card/g)||[]).length,3);assert(result.includes('nov-result-total'));
 }
 console.log('Presentation passed: November-only multiweek total, empty state, single current tier, separated result cards');
