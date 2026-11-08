@@ -250,3 +250,12 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 /* V7: original yellow palette restored; only top November total is vivid yellow. */
 .total-award-card.nov-top-total{background:#EAB74C!important;border-color:#EAB74C!important;color:#173b68!important}
 .nov-top-total>small,.nov-top-total #total-cash,.nov-top-total .nov-top-note{color:#173b68!important}
+/* V10: November-only accents match the top award card. HI-STAR/HI-POINT unchanged. */
+#november{--nov-award-accent:#EAB74C;--nov-award-ink:#173b68}
+#november .nov-tier-caption strong,#november .nov-targets>.is-current,#november .nov-result-card.tier-result{background:var(--nov-award-accent);border-color:var(--nov-award-accent);color:var(--nov-award-ink)}
+#november .is-current .nov-tier-tag,#november .nov-targets>.is-current small,#november .nov-targets>.is-current b,#november .tier-result strong,#november .tier-result small,#november .tier-result span{color:var(--nov-award-ink)}
+#november .nov-monthly-status b,#november .nov-monthly-next b,#november .section-title::after,#november .is-current::after{color:var(--nov-award-accent)}
+#november .nov-sim input:focus{outline-color:var(--nov-award-accent);border-color:var(--nov-award-accent)}
+#november .nov-week:not(.pending)>strong,#november .week-result strong{display:block;background:var(--nov-award-accent);color:var(--nov-award-ink);border-radius:10px;padding:9px 11px}
+#november .nov-result-total{background:var(--nov-award-accent);color:var(--nov-award-ink)}
+#november .nov-result-total small,#november .nov-result-total strong,#november .nov-result-total span{color:var(--nov-award-ink)}
