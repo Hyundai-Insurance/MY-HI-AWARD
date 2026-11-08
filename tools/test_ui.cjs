@@ -10,10 +10,10 @@ vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(root,'js/dat
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');assert(!index.includes('id="total-points"'));assert(index.includes('11월 시상금 한눈에 보기!'));
 elements['total-cash']=new Element();elements['total-note']=new Element();
 context.addEventListener=()=>{};vm.runInContext(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\n globalThis.testApp=app;',context);
-context.testApp.data={november:{weeks:[{sourceAward:130000},{sourceAward:260000}]}};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'390,000원');
+context.testApp.data={november:{monthly:400000,targets:[300000,400000,500000],specialFlag:false,weeks:[{week:1,performance:100000},{week:2,performance:200000,awardBasis:200000,tierRates:[0.8,0.8,1.1,1.4]}]}};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'350,000원');
 context.testApp.data={};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'-');
 for(const [monthly,tier] of [[299999,0],[300000,1],[400000,2],[500000,3]]){
- const p={monthly,targets:[300000,400000,500000],specialFlag:false,sourceTier:'',weeks:[{performance:100000,sourceAward:100000}]};
+ const p={monthly,targets:[300000,400000,500000],specialFlag:false,sourceTier:'',weeks:[{week:1,performance:100000,sourceAward:100000}]};
  context.N.render(p);const html=elements.november.innerHTML;
  assert.equal((html.match(/aria-current="step"/g)||[]).length,tier===0?0:1);
  const result=elements['nov-output'].innerHTML;assert.equal((result.match(/nov-result-card/g)||[]).length,3);assert(result.includes('nov-result-total'));

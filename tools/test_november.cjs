@@ -1,6 +1,6 @@
 const fs=require('fs'),path=require('path'),assert=require('assert');const N=require(require('path').join(__dirname,'../js/november.js'));let count=0,mismatch=[];let sample;
 for(const dir of fs.readdirSync(require('path').join(__dirname,'../data/planner')))for(const file of fs.readdirSync(require('path').join(__dirname,'../data/planner',dir))){
- const r=JSON.parse(fs.readFileSync(require('path').join(__dirname,'../data/planner',dir)+'/'+file));if(!r.november)continue;const p=r.november;count++;const c=N.calculate(p,p.monthly,p.weeks.map(w=>w.performance));if(Math.abs(c.total-p.weeks[0].sourceAward)>.001)mismatch.push([p.code,c.total,p.weeks[0].sourceAward]);if(r.hiStar&&r.hiPoint&&!sample)sample=p.code;
+ const r=JSON.parse(fs.readFileSync(require('path').join(__dirname,'../data/planner',dir)+'/'+file));if(!r.november)continue;const p=r.november;count++;assert(Math.abs(N.published(p,p.monthly).total-p.weeks[0].sourceAward)<.001);const c=N.calculate(p,p.monthly,p.weeks.map(w=>w.performance));if(Math.abs(c.total-p.weeks[0].sourceAward)>.001)mismatch.push([p.code,c.total,p.weeks[0].sourceAward]);if(r.hiStar&&r.hiPoint&&!sample)sample=p.code;
 }
 assert.equal(mismatch.length,0,JSON.stringify(mismatch.slice(0,5)));
 let p={targets:[300000,400000,500000],specialFlag:false};
