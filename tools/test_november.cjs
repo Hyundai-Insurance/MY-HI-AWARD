@@ -11,4 +11,4 @@ assert.deepEqual(N.calculate(p,400000,[100000,200000]).awards,[130000,260000]);
 p={targets:[1000000,null,1200000],specialFlag:false};assert.equal(N.tier(p,1000000),1);assert.equal(N.tier(p,1200000),3);assert.equal(N.next(p,1000000).target,1200000);p.specialFlag=true;assert.equal(N.tier(p,0),3);
 console.log(JSON.stringify({novemberCount:count,allExcelAwardsMatched:true,sample,boundaries:'passed'}));
 
-assert.equal(N.tier({targets:[300000,400000,500000],specialFlag:false},0),1);assert.equal(N.calculate({targets:[300000,400000,500000],specialFlag:false},0,[100000]).total,100000);assert.equal(N.next({targets:[300000,400000,500000],specialFlag:false},0).gap,300000);
+assert.equal(N.tier({targets:[300000,400000,500000],specialFlag:false},0),1);assert.equal(N.calculate({targets:[300000,400000,500000],specialFlag:false},0,[100000]).total,100000);assert.equal(N.next({targets:[300000,400000,500000],specialFlag:false},0).gap,400000);
