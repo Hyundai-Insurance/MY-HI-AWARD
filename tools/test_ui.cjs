@@ -11,6 +11,8 @@ const index=fs.readFileSync(path.join(root,'index.html'),'utf8');assert(!index.i
 elements['total-cash']=new Element();elements['total-note']=new Element();
 context.addEventListener=()=>{};vm.runInContext(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\n globalThis.testApp=app;',context);
 context.testApp.data={november:{monthly:400000,targets:[300000,400000,500000],specialFlag:false,weeks:[{week:1,performance:100000},{week:2,performance:200000,awardBasis:200000,tierRates:[0.8,0.8,1.1,1.4]}]}};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'350,000원');
+context.N.render(context.testApp.data.november);
+assert(elements.november.innerHTML.includes('지급률 · 2주차</small><b>110<span>%</span>'));
 context.testApp.data={};context.testApp.renderTotal(null,null);assert.equal(elements['total-cash'].textContent,'-');
 for(const [monthly,tier] of [[299999,1],[300000,1],[400000,2],[500000,3]]){
  const p={monthly,targets:[300000,400000,500000],specialFlag:false,sourceTier:'',weeks:[{week:1,performance:100000,sourceAward:100000}]};
@@ -19,6 +21,7 @@ for(const [monthly,tier] of [[299999,1],[300000,1],[400000,2],[500000,3]]){
  assert.equal((html.match(/aria-current="step"/g)||[]).length,tier===1?0:1);
  assert(!html.includes('<small>기본</small>'));
  assert(!html.includes('예상 시뮬레이션'));
+ assert(html.includes('지급률 · 1주차'));
  if(tier===1) assert(html.includes('10UP 목표까지'));
 }
 console.log('Presentation passed: November-only multiweek total, empty state, 10UP/20UP goals and active tier');

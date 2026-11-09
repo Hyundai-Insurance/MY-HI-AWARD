@@ -42,12 +42,16 @@ const November = {
     el.innerHTML='<div class="section-title"><span>🏆</span><div><h2>11월 아듀 2026</h2><p>월 누계 목표와 주차별 예상 시상금</p></div></div>';
     if(!p){el.insertAdjacentHTML('beforeend','<p class="empty">조회 가능한 11월 시상 데이터가 없습니다.</p>');return;}
     const money=v=>this.money(v), labels=['기본','기본','10UP','20UP'];
-    const calc=this.calculate(p,p.monthly,p.weeks.map(w=>w.performance));
     const next=this.next(p,p.monthly);
     const published=this.published(p,p.monthly);
+    const latestWeek = published.weeks.reduce((latest, week) => {
+      return !week.pending && (!latest || week.week > latest.week) ? week : latest;
+    }, null);
+    const rateLabel = latestWeek ? `지급률 · ${latestWeek.week}주차` : '지급률';
+    const percent = rate => (rate * 100).toLocaleString('ko-KR', {maximumFractionDigits: 2});
     const goalCards = p.targets.slice(1).map((value, index) => {
       const tier = index + 2;
-      const active = calc.tier === tier;
+      const active = published.tier === tier;
       const status = active ? '★ 현재 구간' : value == null ? '대상 없음' : '목표';
       return `<div class="nov-target${active ? ' is-current' : ''}"${active ? ' aria-current="step"' : ''}>
         <span class="nov-tier-tag">${status}</span>
@@ -55,10 +59,10 @@ const November = {
         <b>${value == null ? '대상 없음' : money(value)}</b>
       </div>`;
     }).join('');
-    el.insertAdjacentHTML('beforeend',`<div class="nov-tier-caption">현재 달성 구간 <strong>${labels[calc.tier]}</strong></div><div class="nov-targets">${goalCards}</div>
-      <div class="nov-current nov-monthly-card"><div class="nov-monthly-label">월 누계 실적 <span>관리사항 미적용</span></div><strong class="nov-monthly-value">${money(p.monthly)}</strong><div class="nov-monthly-status"><div><small>달성 구간</small><b>${labels[calc.tier]}</b></div><div><small>지급률 · 1주차</small><b>${calc.rate*100}<span>%</span></b></div></div><div class="nov-monthly-next"><small>다음 목표 안내</small><p>${next?`${next.label} 목표까지 <b>${money(next.gap)}</b> 부족`:'20UP 구간 달성'}</p></div></div>
+    el.insertAdjacentHTML('beforeend',`<div class="nov-tier-caption">현재 달성 구간 <strong>${labels[published.tier]}</strong></div><div class="nov-targets">${goalCards}</div>
+      <div class="nov-current nov-monthly-card"><div class="nov-monthly-label">월 누계 실적 <span>관리사항 미적용</span></div><strong class="nov-monthly-value">${money(p.monthly)}</strong><div class="nov-monthly-status"><div><small>달성 구간</small><b>${labels[published.tier]}</b></div><div><small>${rateLabel}</small><b>${latestWeek ? `${percent(latestWeek.rate)}<span>%</span>` : '-'}</b></div></div><div class="nov-monthly-next"><small>다음 목표 안내</small><p>${next?`${next.label} 목표까지 <b>${money(next.gap)}</b> 부족`:'20UP 구간 달성'}</p></div></div>
       <p class="guide">월 누계 구간을 기준으로 공개 주차 전체의 시상금을 다시 계산합니다. 기본 구간 지급률은 1주차 100%, 2주차 80%입니다.</p>
-      ${[1,2,3,4,5].map(number=>{const week=published.weeks.find(w=>w.week===number&&!w.pending);return week?`<div class="nov-week"><b>${number}주차${number===1?' · 11/1~6':number===2?' · 11/9~13':''}</b><span>관리사항 적용 실적 ${money(week.performance)}</span><span>현재 월 누계 기준 지급률 ${week.rate*100}%</span><strong>예상 시상금 ${money(week.award)}</strong></div>`:`<div class="nov-week pending"><b>${number}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`;}).join('')}
+      ${[1,2,3,4,5].map(number=>{const week=published.weeks.find(w=>w.week===number&&!w.pending);return week?`<div class="nov-week"><b>${number}주차${number===1?' · 11/1~6':number===2?' · 11/9~13':''}</b><span>관리사항 적용 실적 ${money(week.performance)}</span><span>현재 월 누계 기준 지급률 ${percent(week.rate)}%</span><strong>예상 시상금 ${money(week.award)}</strong></div>`:`<div class="nov-week pending"><b>${number}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`;}).join('')}
       <div class="nov-current"><small>누적 예상 시상금 · 공개 주차 합계</small><strong>${money(published.total)}</strong></div>
       <p class="guide">보장구성비·태아보험 미적용으로 실제 시상금은 변동될 수 있습니다. 미공개 주차는 누적 예상 시상금에서 제외합니다.</p>`);
 
