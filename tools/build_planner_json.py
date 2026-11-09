@@ -157,7 +157,28 @@ def main():
 
     data = {}
 
-    # November: preserve cached Excel results; the supplied V formula references O, not G.
+    # Use row 5 labels: adding a new week shifts the columns after the performance fields.
+    headers = november_rows.get(5, [])
+
+    def column(label):
+        return next((i for i, value in enumerate(headers)
+                     if str(value or '').strip().split('\n')[0] == label), None)
+
+    week1_performance = column('1주차 실적')
+    if week1_performance is None:
+        week1_performance = column('현재 실적')
+    week_columns = [(1, week1_performance, column('1주차 시상금'))]
+    week2 = (2, column('2주차 실적'), column('2주차 시상금'))
+    if any(i is not None for i in week2[1:]):
+        week_columns.append(week2)
+    flag_col = column('관리사항 적용1')
+    tier_col = column('현재 구간')
+    contract_col = column('1차월 본인 계약')
+    required = [7, 9, 10, flag_col, tier_col]
+    required.extend(i for _, performance, award in week_columns for i in (performance, award))
+    if any(i is None for i in required) or contract_col is None:
+        raise ValueError('Missing required November column in 플래너별 row 5')
+
     for rn, r in november_rows.items():
         if rn < 6:
             continue
@@ -166,16 +187,18 @@ def main():
             continue
         if c in data:
             raise ValueError(f'Duplicate November code: {c}')
-        required = [7,9,10,13,14,19,21]
         if any(get(r, i) is None or str(get(r,i)).startswith('#') for i in required):
             raise ValueError(f'Missing/error cached Excel value: row {rn}; save recalculated Excel first')
+        weeks = [
+            {'week': week, 'performance': num(get(r, performance)), 'sourceAward': num(get(r, award))}
+            for week, performance, award in week_columns
+        ]
         data[c] = {'november': {
             'code': c, 'region':get(r,1), 'branch':get(r,2), 'name':get(r,4),
             'careerMonth':num(get(r,6)), 'targets':[num(get(r,i), None) for i in (7,8,9)],
-            'monthly':num(get(r,10)), 'sourceNext':get(r,11), 'sourceTier':get(r,21),
-            'specialFlag':num(get(r,14)) == 1,
-            'weeks':[{'week':1,'performance':num(get(r,13)), 'sourceAward':num(get(r,19))}],
-            'ownContract':num(get(r,17)), 'sourceRow':rn
+            'monthly':num(get(r,10)), 'sourceNext':get(r,11), 'sourceTier':get(r,tier_col),
+            'specialFlag':num(get(r,flag_col)) == 1,
+            'weeks':weeks, 'ownContract':num(get(r,contract_col)), 'sourceRow':rn
         }}
 
     # HI-STAR: row 6 headers, row 7+ planner rows.

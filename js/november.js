@@ -1,4 +1,4 @@
-/* November rules transcribed from 플래너별 T/V. Future-week rates are unpublished. */
+/* November week 1 and 2 payout rates follow the 플래너별 workbook formulas. */
 const November = {
   tier(p, monthly) {
     const [base, up10, up20] = p.targets;
@@ -19,12 +19,13 @@ const November = {
   },
   published(p, monthly, overrides={}) {
     const tier=this.tier(p,monthly);
+    const confirmedRates = {1:[1,1,1.3,1.6], 2:[0.8,0.8,1.1,1.4]};
     const weeks=p.weeks.map(w=>{
-      const rates=w.week===1?[1,1,1.3,1.6]:w.tierRates;
-      const supported=w.week===1||(Array.isArray(rates)&&rates.length===4&&Number.isFinite(w.awardBasis));
+      const rates=w.tierRates ?? confirmedRates[w.week];
+      const supported=Array.isArray(rates)&&rates.length===4&&(confirmedRates[w.week]||Number.isFinite(w.awardBasis));
       if(!supported)return {...w,pending:true};
       const performance=overrides[w.week]??w.performance;
-      const basis=w.week===1?this.basis(performance):w.awardBasis;
+      const basis=w.awardBasis ?? this.basis(performance);
       return {...w,performance,rate:rates[tier],award:basis*rates[tier],pending:false};
     });
     return {tier,weeks,total:weeks.reduce((sum,w)=>sum+(w.pending?0:w.award),0)};
@@ -56,8 +57,8 @@ const November = {
     }).join('');
     el.insertAdjacentHTML('beforeend',`<div class="nov-tier-caption">현재 달성 구간 <strong>${labels[calc.tier]}</strong></div><div class="nov-targets">${goalCards}</div>
       <div class="nov-current nov-monthly-card"><div class="nov-monthly-label">월 누계 실적 <span>관리사항 미적용</span></div><strong class="nov-monthly-value">${money(p.monthly)}</strong><div class="nov-monthly-status"><div><small>달성 구간</small><b>${labels[calc.tier]}</b></div><div><small>지급률 · 1주차</small><b>${calc.rate*100}<span>%</span></b></div></div><div class="nov-monthly-next"><small>다음 목표 안내</small><p>${next?`${next.label} 목표까지 <b>${money(next.gap)}</b> 부족`:'20UP 구간 달성'}</p></div></div>
-      <p class="guide">월 누계 구간을 기준으로 공개 주차 전체의 시상금을 다시 계산합니다. 기본 구간에는 지급률 100%를 적용합니다.</p>
-      ${[1,2,3,4,5].map(number=>{const week=published.weeks.find(w=>w.week===number&&!w.pending);return week?`<div class="nov-week"><b>${number}주차${number===1?' · 11/1~6':''}</b><span>관리사항 적용 실적 ${money(week.performance)}</span><span>현재 월 누계 기준 지급률 ${week.rate*100}%</span><strong>예상 시상금 ${money(week.award)}</strong></div>`:`<div class="nov-week pending"><b>${number}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`;}).join('')}
+      <p class="guide">월 누계 구간을 기준으로 공개 주차 전체의 시상금을 다시 계산합니다. 기본 구간 지급률은 1주차 100%, 2주차 80%입니다.</p>
+      ${[1,2,3,4,5].map(number=>{const week=published.weeks.find(w=>w.week===number&&!w.pending);return week?`<div class="nov-week"><b>${number}주차${number===1?' · 11/1~6':number===2?' · 11/9~13':''}</b><span>관리사항 적용 실적 ${money(week.performance)}</span><span>현재 월 누계 기준 지급률 ${week.rate*100}%</span><strong>예상 시상금 ${money(week.award)}</strong></div>`:`<div class="nov-week pending"><b>${number}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`;}).join('')}
       <div class="nov-current"><small>누적 예상 시상금 · 공개 주차 합계</small><strong>${money(published.total)}</strong></div>
       <p class="guide">보장구성비·태아보험 미적용으로 실제 시상금은 변동될 수 있습니다. 미공개 주차는 누적 예상 시상금에서 제외합니다.</p>`);
 
