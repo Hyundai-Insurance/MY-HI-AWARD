@@ -1,10 +1,16 @@
 /* November week 1 and 2 payout rates follow the 플래너별 workbook formulas. */
 const November = {
   tier(p, monthly) {
-    const [base, up10, up20] = p.targets;
+    const [, up10, up20] = p.targets;
+    // Excel formulas can store an integer goal with a tiny floating-point remainder.
+    const reached = target => {
+      if (!Number.isFinite(target)) return false;
+      const tolerance = Math.max(Math.abs(monthly), Math.abs(target)) * Number.EPSILON * 4;
+      return monthly >= target || target - monthly <= tolerance;
+    };
     if (p.specialFlag) return 3;
-    if (monthly >= 1000000) return monthly >= up20 ? 3 : 1;
-    return monthly >= up20 ? 3 : up10 != null && monthly >= up10 ? 2 : 1;
+    if (reached(1000000)) return reached(up20) ? 3 : 1;
+    return reached(up20) ? 3 : reached(up10) ? 2 : 1;
   },
   rate(tier) { return tier === 3 ? 1.6 : tier === 2 ? 1.3 : 1; },
   basis(value) {
