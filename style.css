@@ -234,7 +234,7 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 .hi-total-plus{font-size:clamp(19px,5vw,29px);font-weight:900;line-height:1.2;color:#d69710;flex:none}
 @media(max-width:355px){.hi-total-line{gap:5px}.hi-total-line>strong{font-size:clamp(17px,5vw,21px)!important;letter-spacing:-.8px!important}}
 /* November award: existing navy/orange palette, mobile-first. */
-.nov-targets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.nov-targets>div{padding:12px 5px;border-radius:12px;background:#edf4fc;text-align:center}.nov-targets small,.nov-targets b{display:block}.nov-targets b{font-size:14px;margin-top:8px;overflow-wrap:anywhere}.nov-current{padding:20px;background:#173b68;color:white;border-radius:18px;margin:14px 0}.nov-current>strong{display:block;font-size:29px;margin:10px 0;overflow-wrap:anywhere}.nov-current p{font-size:15px;line-height:1.6}.nov-week{border:1px solid #dfe6ef;padding:16px;border-radius:14px;margin:10px 0}.nov-week>*{display:block;margin:5px 0}.nov-week span{font-size:14px}.nov-week strong{color:#c95e00}.nov-week.pending{background:#f4f6f9;color:#62718a}.nov-sim{padding:16px;border:2px solid #d7e6f9;border-radius:16px;margin-top:22px}.nov-sim summary{font-size:19px;font-weight:800;cursor:pointer}.nov-sim label{display:block;font-size:15px;font-weight:700;margin:18px 0 8px}.nov-sim input{width:100%;height:52px;border:1px solid #93a9c6;border-radius:10px;padding:10px;font:inherit;font-size:18px}.nov-sim button{margin:12px 0;padding:12px;border-radius:10px;background:#edf4fc;color:#173b68}#nov-output{background:#fff7e9;border-radius:14px;padding:16px;line-height:1.6}#nov-output>strong{display:block;font-size:28px;overflow-wrap:anywhere}.tabs{flex-wrap:wrap}.nov-sim .guide,#november>.guide{font-size:13px;line-height:1.7}.profile.hidden{display:flex!important}
+.nov-targets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.nov-targets>div{padding:12px 5px;border-radius:12px;background:#edf4fc;text-align:center}.nov-targets small,.nov-targets b{display:block}.nov-targets b{font-size:14px;margin-top:8px;overflow-wrap:anywhere}.nov-current{padding:20px;background:#173b68;color:white;border-radius:18px;margin:14px 0}.nov-current>strong{display:block;font-size:29px;margin:10px 0;overflow-wrap:anywhere}.nov-current p{font-size:15px;line-height:1.6}.nov-week{border:1px solid #dfe6ef;padding:16px;border-radius:14px;margin:10px 0}.nov-week>*{display:block;margin:5px 0}.nov-week span{font-size:14px}.nov-week strong{color:#c95e00}.nov-week.pending{background:#f4f6f9;color:#62718a}.nov-sim{padding:16px;border:2px solid #d7e6f9;border-radius:16px;margin-top:22px}.nov-sim summary{font-size:19px;font-weight:800;cursor:pointer}.nov-sim label{display:block;font-size:15px;font-weight:700;margin:18px 0 8px}.nov-sim input{width:100%;height:52px;border:1px solid #93a9c6;border-radius:10px;padding:10px;font:inherit;font-size:18px}.nov-sim button{margin:12px 0;padding:12px;border-radius:10px;background:#edf4fc;color:#173b68}#nov-output{background:#fff7e9;border-radius:14px;padding:16px;line-height:1.6}#nov-output>strong{display:block;font-size:28px;overflow-wrap:anywhere}.tabs{flex-wrap:wrap}.nov-sim .guide,#november>.guide{font-size:13px;line-height:1.7}.profile.hidden{display:flex!important}
 /* November presentation refresh: one-row navigation, raised gold active tier. */
 #result header>div>b{font-size:clamp(14px,4.1vw,19px);letter-spacing:-.6px;white-space:nowrap}#result header>div{gap:8px}#result header button{flex-shrink:0;font-size:12px}#result header h1{font-size:clamp(19px,5.3vw,26px);letter-spacing:-.8px}
 .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.tabs button{min-width:0;padding:14px 3px;font-size:clamp(12px,3.5vw,15px);white-space:nowrap;border:1px solid #e1e9f4}.tabs button:first-child{background:linear-gradient(145deg,#24578b,#173b68);color:white;border-color:#173b68;}.tabs button:active{transform:translateY(2px);}
@@ -255,3 +255,60 @@ body{font-weight:600!important;-webkit-font-smoothing:antialiased;text-rendering
 #november .nov-tier-caption strong,#november .nov-targets>.is-current{background:var(--nov-award-accent);border-color:var(--nov-award-accent);color:var(--nov-award-ink)}
 #november .is-current .nov-tier-tag,#november .nov-targets>.is-current small,#november .nov-targets>.is-current b{color:var(--nov-award-ink)}
 #november .nov-monthly-status b,#november .nov-monthly-next b,#november .is-current::after{color:var(--nov-award-accent)}
+
+/* V17: stable type sizes with fluid, wrapping mobile layouts. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;font-size:16px}
+body{font-size:16px;line-height:1.45}
+input,button{font-family:inherit}
+.app{width:100%;min-width:0}
+img{max-width:100%}
+header>div,.profile{flex-wrap:wrap;gap:10px}
+header>div>*,.profile>div,.section-title>div{min-width:0}
+.profile>div{overflow-wrap:anywhere}
+#result header>div>b{font-size:17px;white-space:normal;overflow-wrap:anywhere}
+#result header h1{font-size:17px;white-space:normal;line-height:1.5}
+.tabs button{font-size:14px;white-space:normal;overflow-wrap:anywhere}
+.panel>.section-title h2{line-height:1.35}
+.nov-top-total>small{font-size:17px!important}
+.nov-top-total #total-cash{font-size:36px!important;white-space:normal;overflow-wrap:anywhere}
+.nov-top-note{line-height:1.6;overflow-wrap:anywhere}
+.nov-targets small{font-size:16px}
+.nov-targets b{font-size:13px;line-height:1.5;letter-spacing:-.4px}
+.nov-tier-tag{white-space:normal;line-height:1.4}
+.nov-monthly-status{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nov-monthly-status>div{min-width:0;overflow-wrap:anywhere}
+.nov-monthly-status b{line-height:1.4}
+.nov-week{overflow-wrap:anywhere;line-height:1.6}
+.nov-week strong{font-size:18px}
+.login-card-classic .login-welcome{font-size:25px}
+.login-card-classic h2{font-size:22px;line-height:1.4}
+.login-card-classic input{font-size:24px!important}
+.login-card-classic input::placeholder{font-size:21px!important}
+.login-card-classic button{font-size:20px!important}
+.login-benefits-classic .benefit span{font-size:12px;overflow-wrap:anywhere}
+.board{grid-template-columns:repeat(3,minmax(0,1fr))}
+.flip-card{height:156px;min-width:0}
+.flip-face{padding:8px 5px}
+.flip-front b,.flip-back b{font-size:12px;overflow-wrap:anywhere}
+.flip-front small{font-size:10px;overflow-wrap:anywhere}
+.flip-front b .mission-note{font-size:9px}
+.flip-back em{font-size:10px;overflow-wrap:anywhere}
+.reward-earned{flex-wrap:wrap;gap:8px}
+.hp-summary-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hp-summary-card small{font-size:12px}
+.hp-summary-card strong{font-size:28px;overflow-wrap:anywhere}
+.hp-mission{gap:3px;padding:6px 3px}
+.hp-mission .hp-ico{font-size:18px}
+.hp-mission b{font-size:12px;overflow-wrap:anywhere}
+.hp-mission strong{font-size:24px;max-width:100%;overflow-wrap:anywhere}
+.hp-core .hp-star{font-size:24px}
+.hp-core b{font-size:12px}
+.hp-core strong{font-size:24px;letter-spacing:-1px}
+.hp-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hp-metrics>div{min-width:0}
+.hp-metrics strong{font-size:12px;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:340px){
+ .hp-orbit{min-height:360px;aspect-ratio:auto}
+ .hp-mission{min-height:84px;min-width:84px}
+ .hp-core{min-height:116px;min-width:116px}
+}

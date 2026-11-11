@@ -55,8 +55,8 @@ const November = {
     }, null);
     const rateLabel = latestWeek ? `지급률 · ${latestWeek.week}주차` : '지급률';
     const percent = rate => (rate * 100).toLocaleString('ko-KR', {maximumFractionDigits: 2});
-    const goalCards = p.targets.slice(1).map((value, index) => {
-      const tier = index + 2;
+    const goalCards = p.targets.map((value, index) => {
+      const tier = index + 1;
       const active = published.tier === tier;
       const status = active ? '★ 현재 구간' : value == null ? '대상 없음' : '목표';
       return `<div class="nov-target${active ? ' is-current' : ''}"${active ? ' aria-current="step"' : ''}>
