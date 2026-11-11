@@ -287,7 +287,7 @@ header>div>*,.profile>div,.section-title>div{min-width:0}
 .login-card-classic button{font-size:20px!important}
 .login-benefits-classic .benefit span{font-size:12px;overflow-wrap:anywhere}
 .board{grid-template-columns:repeat(3,minmax(0,1fr))}
-.flip-card{height:156px;min-width:0}
+.flip-card{height:124px;min-width:0}
 .flip-face{padding:8px 5px}
 .flip-front b,.flip-back b{font-size:12px;overflow-wrap:anywhere}
 .flip-front small{font-size:10px;overflow-wrap:anywhere}
