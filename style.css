@@ -315,3 +315,7 @@ header>div>*,.profile>div,.section-title>div{min-width:0}
 
 /* Remove the decorative sparkle above the current goal card. */
 .nov-targets>.is-current::after{content:none;display:none}
+
+.flip-card.mission-pending{cursor:default;opacity:1}
+.mission-pending .flip-front{background:#eceff2;color:#4d5763}
+.mission-pending .flip-front i{color:inherit}
