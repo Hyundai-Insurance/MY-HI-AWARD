@@ -168,9 +168,10 @@ def main():
     if week1_performance is None:
         week1_performance = column('현재 실적')
     week_columns = [(1, week1_performance, column('1주차 시상금'))]
-    week2 = (2, column('2주차 실적'), column('2주차 시상금'))
-    if any(i is not None for i in week2[1:]):
-        week_columns.append(week2)
+    for week in (2, 3):
+        columns = (week, column(f'{week}주차 실적'), column(f'{week}주차 시상금'))
+        if any(i is not None for i in columns[1:]):
+            week_columns.append(columns)
     flag_col = column('관리사항 적용1')
     tier_col = column('현재 구간')
     contract_col = column('1차월 본인 계약')
