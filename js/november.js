@@ -8,7 +8,7 @@ const November = {
       const tolerance = Math.max(Math.abs(monthly), Math.abs(target)) * Number.EPSILON * 4;
       return monthly >= target || target - monthly <= tolerance;
     };
-    if (p.specialFlag) return 3;
+    if (p.specialFlag || p.careerMonth === 1) return 3;
     if (reached(1000000)) return reached(up20) ? 3 : 1;
     return reached(up20) ? 3 : reached(up10) ? 2 : 1;
   },
@@ -37,7 +37,7 @@ const November = {
     return {tier,weeks,total:weeks.reduce((sum,w)=>sum+(w.pending?0:w.award),0)};
   },
   next(p, monthly) {
-    if (p.specialFlag) return null;
+    if (p.specialFlag || p.careerMonth === 1) return null;
     const t=this.tier(p,monthly);
     const i=t===1?(p.targets[1]==null?2:1):t===2?2:-1;
     return i<0 ? null : {label:['기본','10UP','20UP'][i], target:p.targets[i], gap:Math.max(0,p.targets[i]-monthly)};
