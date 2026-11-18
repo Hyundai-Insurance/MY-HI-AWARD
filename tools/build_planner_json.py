@@ -222,7 +222,7 @@ def main():
             'targetDb': {'key':'targetDb','title':'고객선정' if new else '타겟DB활용','current':num(get(r,11)),'unit':'명' if new else '%','achieved':yn(12),'rule':'집중고객선정 5명' if new else '활용률 70%'},
             'weekly': {'key':'weekly','title':'주차마감','current':num(get(r,13)),'unit':'원','achieved':yn(14),'rule':'1주차 20만원 / 2주차 40만원 / 3주차 60만원 (1차월 80만원 달성 시 인정)' if new else '1주차 40만원 / 2주차 60만원 / 3주차 80만원'},
             'mainProduct': {'key':'mainProduct','title':'주력상품','current':num(get(r,15)),'unit':'원','achieved':yn(16),'rule':'누계 10만원 이상'},
-            'plan': {'key':'plan','title':'10월 4~5주차 2차년도 브릿지 참여','current':num(get(r,17)),'unit':'건','achieved':yn(18),'rule':'10월 4~5주차 2차년도 브릿지 참여'},
+            'plan': {'key':'plan','title':'11월 3~4주차 2차년도 브릿지 참여','current':num(get(r,17)),'unit':'건','achieved':yn(18),'rule':'11월 3~4주차 2차년도 브릿지 참여'},
             'week1': {'key':'week1','title':'1주차 유실적 참여','current':num(get(r,20)),'unit':'원','goal':num(get(r,19)),'achieved':yn(21),'rule':'5만원 참여 (1차월 60만원 달성 시 인정)' if new else '5만원 참여'},
             'event': {'key':'event','title':'입문접수(유치자) or 우수고객초청 행사 참여','current':num(get(r,22)),'unit':'명','achieved':yn(23),'rule':'1명 이상'},
             'auto': {'key':'auto','title':'자동차 / 운전자','current':num(get(r,24)),'unit':'건','achieved':yn(25),'rule':'자동차 1건 or 운전자 1건' if new else '자동차 2건 or 운전자 2건'}
