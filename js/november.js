@@ -67,10 +67,10 @@ const November = {
     }).join('');
     el.insertAdjacentHTML('beforeend',`<div class="nov-tier-caption">현재 달성 구간 <strong>${labels[published.tier]}</strong></div><div class="nov-targets">${goalCards}</div>
       <div class="nov-current nov-monthly-card"><div class="nov-monthly-label">월 누계 실적 <span>관리사항 미적용</span></div><strong class="nov-monthly-value">${money(p.monthly)}</strong><div class="nov-monthly-status"><div><small>달성 구간</small><b>${labels[published.tier]}</b></div><div><small>${rateLabel}</small><b>${latestWeek ? `${percent(latestWeek.rate)}<span>%</span>` : '-'}</b></div></div><div class="nov-monthly-next"><small>다음 목표 안내</small><p>${next?`${next.label} 목표까지 <b>${money(next.gap)}</b> 부족`:'20UP 구간 달성'}</p></div></div>
-      <p class="guide">월 누계 구간을 기준으로 공개 주차 전체의 시상금을 다시 계산합니다. 주차별 20% 차등 예정</p>
+      <p class="guide" style="word-break:keep-all;text-wrap:balance">월 누계 구간을 기준으로 공개 주차 전체의 시상금을 다시 계산합니다.<br>주차별 20% 차등 예정</p>
       ${[1,2,3,4,5].map(number=>{const week=published.weeks.find(w=>w.week===number&&!w.pending);return week?`<div class="nov-week"><b>${number}주차${number===1?' · 11/1~6':number===2?' · 11/9~13':number===3?' · 11/16~20':''}</b><span>관리사항 적용 실적 ${money(week.performance)}</span><span>현재 월 누계 기준 지급률 ${percent(week.rate)}%</span><strong>예상 시상금 ${money(week.award)}</strong></div>`:`<div class="nov-week pending"><b>${number}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`;}).join('')}
       <div class="nov-current"><small>누적 예상 시상금 · 공개 주차 합계</small><strong>${money(published.total)}</strong></div>
-      <p class="guide">보장구성비·태아보험 미적용으로 실제 시상금은 변동될 수 있습니다. 미공개 주차는 누적 예상 시상금에서 제외합니다.</p>`);
+      <p class="guide" style="word-break:keep-all;text-wrap:balance">보장구성비·태아보험 미적용으로 실제 시상금은 변동될 수 있습니다.<br>미공개 주차는 누적 예상 시상금에서 제외합니다.</p>`);
 
   }
 };
