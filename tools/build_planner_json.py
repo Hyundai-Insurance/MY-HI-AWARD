@@ -141,6 +141,105 @@ def closing_date_from_excel_update():
         return None
 
 
+def payout_rates(table, first_column, header_row):
+    """Validate the workbook's stepped payout table and extract its rates."""
+    headers = [get(table.get(header_row, []), first_column + i) for i in (1, 2, 3)]
+    if headers != ['20UP 달성', '20UP 도전', '10UP 도전']:
+        raise ValueError('Missing payout table headers; save the linked payout table in Excel first')
+    rates = [num(get(table.get(header_row + 7, []), first_column + i), None) for i in (3, 2, 1)]
+    if any(value is None for value in rates):
+        raise ValueError('Missing cached payout rates')
+    thresholds = [-1000000, 50000, 100000, 200000, 300000, 400000, 500000]
+    for offset, threshold in enumerate(thresholds, 1):
+        row = table.get(header_row + offset, [])
+        if get(row, first_column) != threshold:
+            raise ValueError('Unsupported payout threshold in workbook')
+        basis = 0 if threshold < 50000 else 1 if threshold == 500000 else threshold
+        for column_offset, rate in zip((3, 2, 1), rates):
+            value = num(get(row, first_column + column_offset), None)
+            if value is None or abs(value - basis * rate) > .001:
+                raise ValueError('Payout table is not proportional to its documented performance bands')
+    return [rates[0], *rates]
+
+
+def new_payout_tables(z, targets, strings, planner_rows):
+    if '지급표' in targets:
+        payout = rows(z, targets['지급표'], strings)
+    else:
+        payout = None
+        for name in z.namelist():
+            if not re.fullmatch(r'xl/externalLinks/externalLink\d+\.xml', name):
+                continue
+            root = ET.fromstring(z.read(name))
+            names = [el.get('val') for el in root.findall(f'.//{{{MAIN}}}sheetName')]
+            if '지급표' not in names:
+                continue
+            sheet = root.find(f'.//{{{MAIN}}}sheetData[@sheetId="{names.index("지급표")}"]')
+            if sheet is None:
+                continue
+            payout = {}
+            for row in sheet:
+                values = []
+                for cell in row:
+                    index = ci(cell.get('r'))
+                    values.extend([None] * (index + 1 - len(values)))
+                    value = cell.find(f'{{{MAIN}}}v')
+                    raw = value.text if value is not None else None
+                    values[index] = raw if cell.get('t') == 'str' else num(raw, None)
+                payout[int(row.get('r'))] = values
+            break
+        if payout is None:
+            raise ValueError('No saved 지급표 found in workbook or external-link cache')
+    return {
+        1: [payout_rates(payout, 1, row) for row in (3, 12)],
+        2: [payout_rates(payout, 6, row) for row in (3, 12)],
+        3: [payout_rates(planner_rows, 23, row) for row in (6, 15)],
+        4: [payout_rates(payout, 16, row) for row in (3, 12)],
+    }
+
+
+def new_november_records(planner_rows, tables):
+    data = {}
+    headers = planner_rows.get(5, [])
+    expected = {7: '기본', 8: '10UP', 9: '20UP', 11: '도전 목표',
+                13: '1주차', 14: '2주차', 15: '3주차', 16: '4-5주차',
+                19: '1주차 시상금', 20: '2주차 시상금', 21: '3주차 시상금', 22: '4-5주차 시상금'}
+    for index, label in expected.items():
+        if str(get(headers, index) or '').strip() != label:
+            raise ValueError(f'Unexpected new-format header: column {index + 1}, expected {label}')
+    for rn, row in planner_rows.items():
+        if rn < 6:
+            continue
+        code = norm(get(row, 5))
+        if not re.fullmatch(r'[0-9A-Z]{6}', code):
+            continue
+        if code in data:
+            raise ValueError(f'Duplicate November code: {code}')
+        for index in [6, 7, 9, 10, 18, *range(13, 17), *range(19, 23)]:
+            value = get(row, index)
+            if num(value, None) is None:
+                raise ValueError(f'Missing/error cached Excel value at row {rn}, column {index + 1}')
+        if get(row, 11) not in ('10UP 도전', '20UP 도전', '20UP 달성'):
+            raise ValueError(f'Unknown challenge label at row {rn}')
+        table_index = 1 if get(row, 8) in (None, '') else 0
+        weeks = [{'week': week, 'label': '4~5' if week == 4 else str(week),
+                  'performance': num(get(row, 12 + week)),
+                  'sourceAward': num(get(row, 18 + week)),
+                  'tierRates': tables[week][table_index]} for week in range(1, 5)]
+        total = num(get(row, 18))
+        if abs(total - sum(week['sourceAward'] for week in weeks)) > .001:
+            raise ValueError(f'Weekly awards do not sum to column S at row {rn}')
+        data[code] = {'november': {
+            'schema': 'monthly-table-v2', 'code': code, 'region': get(row, 1),
+            'branch': get(row, 2), 'name': get(row, 4), 'careerMonth': num(get(row, 6)),
+            'targets': [num(get(row, i), None) for i in (7, 8, 9)],
+            'monthly': num(get(row, 10)), 'sourceNext': get(row, 11),
+            'sourceTier': get(row, 11), 'sourceTotal': total,
+            'weeks': weeks, 'sourceRow': rn, 'specialFlag': False,
+        }}
+    return data
+
+
 def main():
     if not XLSX.exists():
         raise SystemExit(f'Missing: {XLSX}')
@@ -154,8 +253,10 @@ def main():
         november_rows = rows(z, targets['플래너별'], ss)
         hsr = rows(z, targets['하이스타'], ss)
         point_rows = rows(z, targets['하이포인트'], ss)
+        new_format = get(november_rows.get(5, []), 11) == '도전 목표'
+        tables = new_payout_tables(z, targets, ss, november_rows) if new_format else None
 
-    data = {}
+    data = new_november_records(november_rows, tables) if new_format else {}
 
     # Use row 5 labels: adding a new week shifts the columns after the performance fields.
     headers = november_rows.get(5, [])
@@ -177,10 +278,12 @@ def main():
     contract_col = column('1차월 본인 계약')
     required = [7, 9, 10, flag_col, tier_col]
     required.extend(i for _, performance, award in week_columns for i in (performance, award))
-    if any(i is None for i in required) or contract_col is None:
+    if not new_format and (any(i is None for i in required) or contract_col is None):
         raise ValueError('Missing required November column in 플래너별 row 5')
 
     for rn, r in november_rows.items():
+        if new_format:
+            break
         if rn < 6:
             continue
         c = norm(get(r, 5))

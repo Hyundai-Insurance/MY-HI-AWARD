@@ -5,6 +5,10 @@ for(const dir of fs.readdirSync(require('path').join(__dirname,'../data/planner'
  const p=r.november;
  count++;
  const computed=N.published(p,p.monthly);
+ if(p.schema==='monthly-table-v2'){
+   assert(Math.abs(computed.total-p.sourceTotal)<.001,`Monthly total mismatch at row ${p.sourceRow}`);
+   assert.equal(computed.tier===3?'20UP 달성':computed.tier===2||p.targets[1]==null?'20UP 도전':'10UP 도전',p.sourceTier,`Challenge mismatch at row ${p.sourceRow}`);
+ }
  for(const week of computed.weeks){
    if(week.pending || Math.abs(week.award-week.sourceAward)>.001){
      mismatch.push({row:p.sourceRow,week:week.week,computed:week.award,expected:week.sourceAward});

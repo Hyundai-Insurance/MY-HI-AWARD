@@ -9,7 +9,7 @@ const November = {
       return monthly >= target || target - monthly <= tolerance;
     };
     if (p.specialFlag || p.careerMonth === 1) return 3;
-    if (reached(1000000)) return reached(up20) ? 3 : 1;
+    if (p.schema !== 'monthly-table-v2' && reached(1000000)) return reached(up20) ? 3 : 1;
     return reached(up20) ? 3 : reached(up10) ? 2 : 1;
   },
   rate(tier) { return tier === 3 ? 1.6 : tier === 2 ? 1.3 : 1; },
@@ -28,7 +28,7 @@ const November = {
     const confirmedRates = {1:[1,1,1.3,1.6], 2:[0.8,0.8,1.1,1.4], 3:[0.6,0.6,0.9,1.2]};
     const weeks=p.weeks.map(w=>{
       const rates=w.tierRates ?? confirmedRates[w.week];
-      const supported=Array.isArray(rates)&&rates.length===4&&(confirmedRates[w.week]||Number.isFinite(w.awardBasis));
+      const supported=Array.isArray(rates)&&rates.length===4&&(p.schema==='monthly-table-v2'||confirmedRates[w.week]||Number.isFinite(w.awardBasis));
       if(!supported)return {...w,pending:true};
       const performance=overrides[w.week]??w.performance;
       const basis=w.awardBasis ?? this.basis(performance);
@@ -53,7 +53,7 @@ const November = {
     const latestWeek = published.weeks.reduce((latest, week) => {
       return !week.pending && (!latest || week.week > latest.week) ? week : latest;
     }, null);
-    const rateLabel = latestWeek ? `지급률 · ${latestWeek.week}주차` : '지급률';
+    const rateLabel = latestWeek ? `지급률 · ${latestWeek.label || latestWeek.week}주차` : '지급률';
     const percent = rate => (rate * 100).toLocaleString('ko-KR', {maximumFractionDigits: 2});
     const goalCards = p.targets.map((value, index) => {
       const tier = index + 1;
@@ -68,7 +68,7 @@ const November = {
     el.insertAdjacentHTML('beforeend',`<div class="nov-tier-caption">현재 달성 구간 <strong>${labels[published.tier]}</strong></div><div class="nov-targets">${goalCards}</div>
       <div class="nov-current nov-monthly-card"><div class="nov-monthly-label">월 누계 실적 <span>관리사항 미적용</span></div><strong class="nov-monthly-value">${money(p.monthly)}</strong><div class="nov-monthly-status"><div><small>달성 구간</small><b>${labels[published.tier]}</b></div><div><small>${rateLabel}</small><b>${latestWeek ? `${percent(latestWeek.rate)}<span>%</span>` : '-'}</b></div></div><div class="nov-monthly-next"><small>다음 목표 안내</small><p>${next?`${next.label} 목표까지 <b>${money(next.gap)}</b> 부족`:'20UP 구간 달성'}</p></div></div>
       <p class="guide" style="word-break:keep-all;text-wrap:balance">월 누계 구간을 기준으로 공개 주차 전체의 시상금을 다시 계산합니다.<br>주차별 20% 차등 예정</p>
-      ${[1,2,3,4,5].map(number=>{const week=published.weeks.find(w=>w.week===number&&!w.pending);return week?`<div class="nov-week"><b>${number}주차${number===1?' · 11/1~6':number===2?' · 11/9~13':number===3?' · 11/16~20':''}</b><span>관리사항 적용 실적 ${money(week.performance)}</span><span>현재 월 누계 기준 지급률 ${percent(week.rate)}%</span><strong>예상 시상금 ${money(week.award)}</strong></div>`:`<div class="nov-week pending"><b>${number}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`;}).join('')}
+      ${(p.schema==='monthly-table-v2'?[1,2,3,4]:[1,2,3,4,5]).map(number=>{const week=published.weeks.find(w=>w.week===number&&!w.pending);return week?`<div class="nov-week"><b>${week.label || number}주차${number===1?' · 11/1~6':number===2?' · 11/9~13':number===3?' · 11/16~20':p.schema==='monthly-table-v2'&&number===4?' · 11/23~30':''}</b><span>관리사항 적용 실적 ${money(week.performance)}</span><span>현재 월 누계 기준 지급률 ${percent(week.rate)}%</span><strong>예상 시상금 ${money(week.award)}</strong></div>`:`<div class="nov-week pending"><b>${number}주차</b><span>오픈 예정 · 실적 및 시상 기준 미공개</span></div>`;}).join('')}
       <div class="nov-current"><small>누적 예상 시상금 · 공개 주차 합계</small><strong>${money(published.total)}</strong></div>
       <p class="guide" style="word-break:keep-all;text-wrap:balance">보장구성비·태아보험 미적용으로 실제 시상금은 변동될 수 있습니다.<br>미공개 주차는 누적 예상 시상금에서 제외합니다.</p>`);
 
